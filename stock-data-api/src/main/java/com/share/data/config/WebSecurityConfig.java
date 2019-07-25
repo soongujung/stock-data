@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 //        super.configure(http);
         http.authorizeRequests()
-                .antMatchers("/", "/about").permitAll() // '/'와 /hello 에 해당하는 페이지는 모든 사용자가 볼 수 있도록 허용
+                .antMatchers("/", "/about", "/auth/slack/redirect").permitAll() // '/'와 /hello 에 해당하는 페이지는 모든 사용자가 볼 수 있도록 허용
                 .anyRequest().authenticated()       // 그 외의 모든 요청은 authentication이 필요하다.
             .and()
                 .formLogin()                        // 그리고 form 로그인을 사용할 것이고
