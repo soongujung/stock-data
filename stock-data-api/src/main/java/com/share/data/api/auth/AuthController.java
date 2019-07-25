@@ -13,4 +13,9 @@ public class AuthController {
         return "index";
     }
 
+    @GetMapping("/auth/slack/redirect")
+    public String redirect(Model model){
+        return "test-slack-signin";
+    }
+
 }
