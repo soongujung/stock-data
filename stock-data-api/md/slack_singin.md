@@ -105,7 +105,46 @@ scope 파라미터에는 보통 identity.basic과 지정한다고 한다(잠재�
 ![parameters](./img/oauth/slack/redirect-url-parameters-1.png)
 ![parameters](./img/oauth/slack/redirect-url-parameters-2.png)  
 
+## Authorization
+사용자가 Sign in with Slack 버튼을 클릭한 후, 사용자의 웹 브라우저는 Slack의 서버로 도착한다.  
 
+Slack은 우리의 애플리케이션은 user가 몇몇 business들을 처리하는 동안 기다리거나 우리가 정의한 redirect URL로 그것들(?)을 보내준다.  
+
+만약 user가 Slack에 로그인 한적이 없다면 그들은 우리가 추가해놨던 APP을 승인할지 묻는 프롬프트를 띄운다.  
+
+### Redirect URI로 전달되는 파라미터
+ 1. Slack APP 승인 거부시   
+     error 파라마터와 함께 redirect_uri로 리다이렉트된다.  
+ 2. Slack APP 승인 허용시  
+     code 파라미터, state 파라미터와 함께 redirect URI 로 오게 된다.  
+     
+ code 파라미터는 authorization 코드이다. 추후 이 authorization코드로 수명이 긴 access token을 교환받게 된다.  
+ 만약 당신이 state 파라미터를 사용한다면, 당신은 state가 당신의 expectation에 매치되는 것을 verify하기를 원할 것이다.  
+ 만약 그렇지 않다면, error 메시지를 출력하고 다음 스텝으로 넘어가지 않는다.
+ 
+## Obtain an access token
+> Sign in Slack 버튼을 눌러 로그인을 했을때 정상적으로 완료되면 Slack APP에 등록한 Redirect URL로 이동한다. 
+> Slack의 resposne를 받아 Redirect URL로 이동할 때 slack에서는 redirect URL 뒤에 query string 으로 code, state 파라미터를 붙여 리다이렉트 되도록 해준다.
+> 즉 request로 넘겨받은 redirect로 넘겨받은 GET 파라미터의 query string 에는 code, state 파라미터가 포함된다.
+ 
+> 바로 이전 절차인 Redirect URL 얻는 절차에서 우리는 code를 얻었다.  
+> 여기서부터 이제는 이 코드를 기반으로 oauth.access에 보낼 request를 만든다.  
+ 
+우리는 이제부터 OAuth negotiation sequence를 oauth.access로 보내는 request를 만드는 것으로 완료할 것이다.  
+request parameter를 준비하기 위해   
+- client_id  
+  APP 환경설정 내의 client ID
+  
+- client_secret  
+  APP 환경설정 내의 client secret  
+  
+- code    
+  Redirect URL로 돌아오는 과정에서 Slack에서 Get 파라미터로 넘겨준 파라미터  
+  
+- redirect_uri  
+  Sign in with Slack 버튼내에 명시적으로 redirect_uri를 선언했을 경우에만 포함시켜준다. 이게 제공되면 바로 매칭이 되며(?), URL-encoded 되어있더라도 매칭된다.
+  
+를 사용한다.
 
 
 
