@@ -2,9 +2,61 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>redirect</title>
+    <title>slack redirect</title>
+    <script type="text/javascript" src="/static/axios.min.js"></script>
+    <script type="text/javascript" src="/static/jquery-3.4.1.min.js"></script>
 </head>
 <body>
     <h1> TEST </h1>
+    <p th:text="'code   :: ' + ${code}"> 슬랙 CODE </p>
+    <p th:text="'state  :: ' + ${state}"> 슬랙 STATE </p>
+
+<script th:inline="javascript">
+    var code = [[${code}]];
+</script>
+
+<script type="text/javascript">
+
+    var BASE_URL = "http://slack.com/api/oauth.access";
+    var client_id = "680595488112.691875062899";
+    var client_secret = "f44c1e5af174e4fbe7ed2c09b6de85cf";
+    var redirect_uri = "http://localhost:9998/auth/slack/redirect";
+
+    window.onload = function(){
+        // alert('code : ' + code);
+
+        console.log(axios);
+
+        // axios.defaults.proxy = {
+        // 	host: 'http://slack.com',
+        //     port: 80
+        // };
+
+        // axios.get(BASE_URL,
+        //     {
+        //     	headers: {
+        //     		'Access-Control-Allow-Origin': '*',
+        //         },
+        //         proxy:{
+        //     		host: 'slack.com',
+        //         },
+        //     	params:{
+        //     		client_id: client_id,
+        //             client_secret: client_secret,
+        //             code: code,
+        //             // redirect_uri: redirect_uri
+        //         }
+        //     }
+        // )
+        // .then(function(response){
+        // 	console.log('response >>> ', response);
+        // })
+
+
+        $.ajax(BASE_URL + '?'+'client_id='+client_id+'&'+'client_secret='+client_secret+'&'+'code='+code, function(response){
+        	console.log('response >>> ' + response);
+        });
+    };
+</script>
 </body>
 </html>
