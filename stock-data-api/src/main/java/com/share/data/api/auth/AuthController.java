@@ -17,6 +17,32 @@ public class AuthController {
         return "index";
     }
 
+    /**
+     * client_id로 서버에서 slack에 콜,
+     * 리턴값으로 slack api 주소가 오는지 확인해야 하고
+     * 온다면 그 주소로 redirect 시킨다.
+     */
+    @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
+    @GetMapping(value = "/auth/slack/proxy/call", produces = "application/x-www-form-urlencoded")
+    public void slackProxyCall(){
+        String clientId = "680595488112.691875062899";
+        String keyName = "client_id";
+        // redirect
+    }
+
+
+    @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
+    @GetMapping(value = "/auth/slack/proxy/redirect", produces = "application/x-www-form-urlencoded")
+    public @ResponseBody Object slackProxyRedirect(@RequestParam("code") String code, @RequestParam("state") String state,
+                                HttpServletRequest request, HttpServletResponse response){
+
+        /**
+         * 성공시 home.html
+         * 실페시 index.html
+         */
+        return null;
+    }
+
     @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
     @GetMapping(value = "/auth/slack/redirect", produces = "application/x-www-form-urlencoded")
     public String redirect(@RequestParam("code") String code , @RequestParam("state") String state,
