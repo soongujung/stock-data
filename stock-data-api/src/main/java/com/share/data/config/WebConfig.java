@@ -17,11 +17,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .setCachePeriod(20);
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/auth/slack/redirect")     // or "/**"
-//                .allowedOrigins("http://slack.com");
-//    }
+        registry.addMapping("/**")     // or "/**"
+                .allowedOrigins("http://slack.com");
+    }
 
 
     //    @Bean
