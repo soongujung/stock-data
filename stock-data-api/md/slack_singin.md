@@ -146,7 +146,79 @@ request parameter를 준비하기 위해
   
 를 사용한다.
 
+## 참고 (Step3 - Exchanging a verification code for an access token)
+ 
+> https://api.slack.com/docs/oauth  
+  
+위에서 정리한 파라미터로 주고 받고 나면 응답으로 데이터를 받는데, 그중 주효한 파라미터들은 아래와 같다.
+  
+```json
+{
+  "access_token": "xoxp-23984754863-2348975623103",
+  "scope": "read"  
+}
+```
+  
+모든 앱에 대한 Access token들은 bearer tokens로 알려져 있다. See token types (https://api.slack.com/docs/token-types) for an overview of all the kinds of tokens involved in Slack platform.  
+
+## Response Breakdown
+oauth.acess 에서 response로 내주는 것들에 대한 명세들이다.  
+- ok
+- access_token
+- scope
+- team_id  
+ 
+> - ok  
+>  request가 성공적으로 완료됐는지 여부를 구분하는 기준. ok가 true 여야 한다.  
+> - access_token  
+>  그렇다. 드디어 access token을 얻었다. 방금전 위에서 본 그림에서 두번째 단계에서 Authorization Server에서 얻어낸 access token이 이거다. 
+> - scope  
+>  다른 scope들도 얻을수 있다. 자세한 내용은 [Appending Scopes](https://api.slack.com/docs/oauth#appending_scopes)를 참고하자.  
+> - team_id  
+>  user의 team ID를 제공한다.
+
+## Storing identity access tokens
+user의 id, team id, access token 을 저장하고자 할 경우에 대한 이야기이다. 이 셋을 삼총사라 한다. 어쩌구 저쩌구를 말하기도 한다.  
+  
+access token들을 배포하지 말라고 경고하고 있다. public code repository, 보안이 적용되지 않은 위치에 보관하지 말라고 한다.  
+이에 대한 참고자료는 [safely storing credentials](https://api.slack.com/docs/oauth-safety) 이다.  
+
+## Using Sign in with Slack and Add to Slack together
+Sign in with Slack과 Add to Slack을 동시에 사용하는 방식에 대한 챕터이다.
+사용자가 Sign in with Slack으로 로그인을 했을때 Add to Slack을 이용하게 된다 그 후 access token을 받는다.  
+
+결과로 얻는 access token들은 itentity.* 를 포함하는데 이 identity.*에는 sign in 과 Add to Slack이 포함되어 있다. 
+Add to Slick은 [여기](https://api.slack.com/docs/slack-button)를 보고 구현하면 된다.  
+  
+## Using tokens to retrieve user and team information
+여기서는 얻어낸 토큰을 사용하는 방법에 대해 다룬다.  
+예제로는 users.identity api를 사용하는 방법이다.  
+> https://slack.com/api/users.identity?token=[access_token]
+  
+으로 접근하면 
+```json
+{
+  "ok": true,
+  "user": {
+    "name": "Sonny Whether",
+    "id": "U0G9QF9C6"
+  },
+  "team": {
+    "id": "T0G9PQBBK"
+  }
+}
+```  
+와 같은 json 메시지를 얻게된다.  
+
+## identity Scopes
 
 
+## Revoking tokens
+Sign in With Slack 액세스 토큰을 소멸 시키는 방법에 대한 설명
+> https://slack.com/api/auth.revoke?token=[access_token] 
+  
+에 http call을 하면 된다.  
 
 
+## 결론
+redirect uri 를 담당하는 페이지에서 auth 컨트롤러에 요청을 보내서 jersey client를 이용해서 하는 것이 괜찮은 방법일듯하다.
