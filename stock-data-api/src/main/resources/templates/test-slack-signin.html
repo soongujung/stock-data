@@ -18,44 +18,67 @@
 <script type="text/javascript">
 
     var BASE_URL = "http://slack.com/api/oauth.access";
+    // var BASE_URL = "http://slack.com/oauth/authorize";
     var client_id = "680595488112.691875062899";
     var client_secret = "f44c1e5af174e4fbe7ed2c09b6de85cf";
     var redirect_uri = "http://localhost:9998/auth/slack/redirect";
+    var url = null;
 
     window.onload = function(){
-        // alert('code : ' + code);
-
-        console.log(axios);
-
         // axios.defaults.proxy = {
         // 	host: 'http://slack.com',
         //     port: 80
         // };
 
-        // axios.get(BASE_URL,
-        //     {
-        //     	headers: {
-        //     		'Access-Control-Allow-Origin': '*',
-        //         },
-        //         proxy:{
-        //     		host: 'slack.com',
-        //         },
-        //     	params:{
-        //     		client_id: client_id,
-        //             client_secret: client_secret,
-        //             code: code,
-        //             // redirect_uri: redirect_uri
-        //         }
-        //     }
-        // )
-        // .then(function(response){
-        // 	console.log('response >>> ', response);
-        // })
-
-
-        $.ajax(BASE_URL + '?'+'client_id='+client_id+'&'+'client_secret='+client_secret+'&'+'code='+code, function(response){
-        	console.log('response >>> ' + response);
+        axios.get(BASE_URL,
+            {
+            	// headers: {
+            	// 	'Access-Control-Allow-Origin': '*',
+                //     'Content-Type': 'application/x-www-form-urlencoded'
+                // },
+                // proxy:{
+            	// 	host: 'slack.com',
+                // },
+            	params:{
+            		client_id: client_id,
+                    client_secret: client_secret,
+                    code: code,
+                    // redirect_uri: redirect_uri
+                }
+            }
+        )
+        .then(function(response){
+        	console.log('response >>> ', response);
         });
+
+        url = BASE_URL + '?'+'client_id='+client_id+'&'+'client_secret='+client_secret+'&'+'code='+code;
+
+        // $.ajax({
+        //     url: url,
+        //     type: 'GET',
+        //     contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+        // },
+        // function(response){
+        // 	console.log('response >>> ', response);
+        // });
+
+        /** POST 방식도 쓸수는 있다. 권장하는 방식이라고는 하는데 공식 DOCUMENTATION에는 언급되어 있지 않다. */
+	    // $.ajax({
+	    //     url: BASE_URL,
+	    //     type: 'POST',
+	    //     contentType: 'application/x-www-form-urlencoded',
+	    //     data: {
+	    //     	// client_id: client_id,
+	    //         // client_secret: client_secret,
+	    //         code: code
+	    //     }
+	    // },
+	    // function(response){
+	    // 	console.log('response >>> ', response);
+	    // });
+
+        /** 그냥 테스트 해봤다. 페이지를 아예 이동할 경우 어떤 HEADER가 찍히는지 확인하기 위해 */
+        // location.href = url;
     };
 </script>
 </body>
