@@ -1,5 +1,6 @@
 package com.share.data.api.auth;
 
+import com.share.data.util.restclient.RestClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Controller
 public class AuthController {
@@ -47,10 +49,30 @@ public class AuthController {
 
     @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
     @GetMapping(value = "/auth/slack/proxy/redirected", produces = "application/x-www-form-urlencoded")
-    public @ResponseBody Object slackProxyRedirect(@RequestParam("code") String code, @RequestParam("state") String state,
+    public @ResponseBody Object slackProxyRedirect( @RequestParam("code") String code,
+                                                    @RequestParam("state") String state,
                                 HttpServletRequest request, HttpServletResponse response){
 
+        final String client_secret = "f44c1e5af174e4fbe7ed2c09b6de85cf";
+        final String client_id = "680595488112.691875062899";
+        final String BASE_URL = "http://slack.com/api/oauth.access";
+
 //        System.out.println("request >>> " + request);
+        System.out.println("response :: " + response );
+
+        StringBuffer sbUrl = new StringBuffer();
+
+        sbUrl.append(BASE_URL)
+                .append("?")
+            .append("code=").append(code)
+                .append("&")
+            .append("client_id=").append(client_id)
+                .append("&")
+            .append("client_secret=").append(client_secret);
+
+        final String reqUrl = sbUrl.toString();
+
+        String apiResult = RestClient.getApiResult(reqUrl);
 
         /**
          * 성공시 home.html
