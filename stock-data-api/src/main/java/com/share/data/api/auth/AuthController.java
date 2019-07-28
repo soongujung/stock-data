@@ -1,6 +1,10 @@
 package com.share.data.api.auth;
 
+import com.share.data.util.restclient.ApacheHttpClient;
 import com.share.data.util.restclient.RestClient;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 @Controller
@@ -51,7 +56,7 @@ public class AuthController {
     @GetMapping(value = "/auth/slack/proxy/redirected", produces = "application/x-www-form-urlencoded")
     public @ResponseBody Object slackProxyRedirect( @RequestParam("code") String code,
                                                     @RequestParam("state") String state,
-                                HttpServletRequest request, HttpServletResponse response){
+                                HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
 
         final String client_secret = "f44c1e5af174e4fbe7ed2c09b6de85cf";
         final String client_id = "680595488112.691875062899";
@@ -72,7 +77,16 @@ public class AuthController {
 
         final String reqUrl = sbUrl.toString();
 
-        String apiResult = RestClient.getApiResult(reqUrl);
+//        String apiResult = RestClient.getApiResult(reqUrl);
+        String apiResult = ApacheHttpClient.getApiResult(reqUrl);
+
+        System.out.println("apiResult >>> " + apiResult);
+
+        JSONParser jsonParser = new JSONParser();
+        Object obj = jsonParser.parse(apiResult);
+        JSONObject jsonObject = (JSONObject) obj;
+
+        System.out.println("access_token >>> " + jsonObject.get("access_token"));
 
         /**
          * 성공시 home.html
