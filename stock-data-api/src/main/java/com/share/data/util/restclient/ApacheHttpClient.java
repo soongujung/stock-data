@@ -8,6 +8,11 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
+/**
+ * 참고자료
+ * https://examples.javacodegeeks.com/core-java/json/java-json-parser-example/
+ * https://zzznara2.tistory.com/673
+ */
 public class ApacheHttpClient {
 
     private CloseableHttpClient httpClient = null;
