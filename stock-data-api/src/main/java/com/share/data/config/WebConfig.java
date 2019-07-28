@@ -20,8 +20,17 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/auth/slack/redirect")     // or "/**"
-        registry.addMapping("/**")     // or "/**"
-                .allowedOrigins("http://slack.com");
+        registry.addMapping("/**")
+                .allowedOrigins("http://slack.com","https://slack.com")
+//                .allowedOrigins("*")
+                .allowedHeaders("Access-Control-Allow-Origin")
+                .allowedMethods(
+                        HttpMethod.GET.name(),
+                        HttpMethod.POST.name(),
+                        HttpMethod.OPTIONS.name(),
+                        HttpMethod.DELETE.name(),
+                        HttpMethod.PUT.name()
+                );
     }
 
 

@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>WELCOME</title>
+    <script type="text/javascript" src="/static/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/static/axios.min.js"></script>
 </head>
 <body>
 <h1>WELCOME</h1>
-<a href="https://slack.com/oauth/authorize?
-        scope=identity.basic
-        &client_id=680595488112.691875062899">
+<a id="signin_slack" style="cursor: pointer;" href="/auth/slack/proxy/grant">
     <img src="https://api.slack.com/img/sign_in_with_slack.png" />
 </a>
+
 </body>
 </html>
