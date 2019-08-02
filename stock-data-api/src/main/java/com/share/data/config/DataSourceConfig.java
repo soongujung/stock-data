@@ -7,22 +7,35 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
 
 @Configuration
 @PropertySource("classpath:/application.properties")
-public class DatabaseConfiguration {
+public class DataSourceConfig {
 
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Value("${spring.datasource.hikari.jdbc-url}")
+    private String jdbcUrl;
+
+    @Value("${spring.datasource.hikari.username}")
+    private String dbUserName;
+
+    @Value("${spring.datasource.hikari.password}")
+    private String dbPassword;
+
+    @Value("${spring.datasource.hikari.driver-class-name}")
+    private String jdbcClassName;
 
 //    @Bean
 //    @ConfigurationProperties(prefix = "spring.datasource.hikari")
@@ -44,19 +57,15 @@ public class DatabaseConfiguration {
                         .type(HikariDataSource.class)
                         .build();
 
+//        HikariConfig hikariConfig = new HikariConfig();
+//        hikariConfig.setUsername(dbUserName);
+//        hikariConfig.setPassword(dbPassword);
+//        hikariConfig.addDataSourceProperty("url", jdbcUrl);
+//        hikariConfig.setDataSourceClassName(jdbcClassName);
+//        hikariConfig.setLeakDetectionThreshold(2000);
+//        hikariConfig.setPoolName("hikari-sgjung");
+//
+//        final HikariDataSource dataSource = new HikariDataSource(hikariConfig);
         return dataSource;
-    }
-
-    @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception{
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResource("classpath:/mapper/**/*.xml"));
-        return sqlSessionFactoryBean.getObject();
-    }
-
-    @Bean
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory){
-        return new SqlSessionTemplate(sqlSessionFactory);
     }
 }
