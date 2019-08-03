@@ -3,6 +3,6 @@
 
 <mapper namespace="testMybatis">
     <select id="getConnTest" resultType="map">
-        SELECT id, name FROM public.conn_test;
+        SELECT id, name FROM conn_test
     </select>
 </mapper>

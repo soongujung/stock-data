@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/about",
                                 "/auth/slack/redirect/**", "/auth/slack/proxy/**",
-                                "/api/test/db",
+                                "/api/test/**",
                                 "/static/**")
                 .permitAll() // '/'와 /hello 에 해당하는 페이지는 모든 사용자가 볼 수 있도록 허용
                 .anyRequest().authenticated()       // 그 외의 모든 요청은 authentication이 필요하다.

@@ -329,6 +329,14 @@ jdbc:postgresql://localhost:5432/stock_data
 PostgreSQL JDBC Driver
 ```
 
+### 테스트 코드 2
+
+
+### jpql, native query
+
+
+### Optional
+
 
 
 

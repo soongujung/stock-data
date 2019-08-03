@@ -49,7 +49,7 @@ public class DataSourceConfig {
      * http://blog.naver.com/PostView.nhn?blogId=admass&logNo=220979632501&beginTime=0&jumpingVid=&from=search&redirect=Log&widgetTypeCall=true
      * @return
      */
-    @Bean
+    @Bean(name = "hikariDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
     public DataSource dataSource(){
         DataSource dataSource =

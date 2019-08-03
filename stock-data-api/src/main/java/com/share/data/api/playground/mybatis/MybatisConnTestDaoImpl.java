@@ -1,4 +1,4 @@
-package com.share.data.api.playground;
+package com.share.data.api.playground.mybatis;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class TestDao {
+public class MybatisConnTestDaoImpl implements MybatisConnTestDao{
 
     @Autowired
     private SqlSession sqlSession;
