@@ -47,6 +47,7 @@ Mybatis 설정을 하면서 Trouble Shoot을 할수 있도록 도와준 참고�
 > 검색어 
   ClassNotFoundException: org.apache.ibatis.annotations.Mapper
   
+
 ### 2) Datasource 커스텀 설정시 적용해야 하는 설정값들
 > 참고자료  
   [Spring Boot & HikariCP Datasource 연동하기, \[기억보단 기록을\]](https://jojoldu.tistory.com/296)
@@ -71,6 +72,4 @@ public class SomeDataConfig{
                 .build();
     }    
 }
-```
-
-  
+```  
