@@ -101,17 +101,17 @@ MockHttpServletResponse:
 
 ##### /hello URL 요청
 
-![login_hello](./img/login_hello.png)
+![login_hello](../img/login_hello.png)
 
 ##### /home URL 요청
 
-![login_hello](./img/login_home.png)
+![login_hello](../img/login_home.png)
 
 
 
   ##### /login URL 리다이렉션
 
-![login_hello](./img/login.png)
+![login_hello](../img/login.png)
 
 
 
@@ -119,19 +119,19 @@ MockHttpServletResponse:
 
 SecurityAutoConfiguration 클래스를 열어보자. SecurityAutoConfiguration 클래스는 Spring Security 가 의존성으로 추가되어 있고SecurityProperties 클래스가 존재할 경우에 적용되는 설정파일이다. SpringBootWebSecurityConfiguration 클래스를 import하고 있다.
 
-![SecurityAutoConfiguration](./img/SecurityAutoConfiguration1.png)
+![SecurityAutoConfiguration](../img/SecurityAutoConfiguration1.png)
 
 
 
 기본적으로 추가하고 있는 DefualtAuthenticationEventPublisher의 인스턴스를 Bean으로 생성하고 있는 부분을 살펴보면 이벤트 퍼블리셔가 빈으로 등록되어 있다.
 
-![SecurityAutoConfiguration](./img/SecurityAutoConfiguration2.png)
+![SecurityAutoConfiguration](../img/SecurityAutoConfiguration2.png)
 
 AuthenticationEventPublisher 가 없을 경우에 한해 조건적으로 빈을 생성하고 있다.  
 
 이제 DefaultAuthenticationEventPublisher 클래스 내부를 살펴보자. DefualtAuthenticationEventPublisher 클래스의 생성자 내부에서는 
 
-![DefaultAuthenticationEventPublisher ](./img/DefaultAuthenticationEventPublisher.png)
+![DefaultAuthenticationEventPublisher ](../img/DefaultAuthenticationEventPublisher.png)
 
 비번이 틀렸다거나, 유저가 없다거나 account가 expired 되었다거나 등등의 경우에 대해서 이벤트를 발생시키고 우리는 그 이벤트에 대한 핸들러를 등록해서 유저의 상태를 변경하는 등 여러가지 일을 할 수 있다. **이러한 작업은 Spring Boot에만 있는것이 아니고 Spring Security에 이미 존재하는 작업이다.**  
 
@@ -143,13 +143,13 @@ AuthenticationEventPublisher 가 없을 경우에 한해 조건적으로 빈을 
 
 ##### SecurityAutoConfiguration 클래스
 
-![SecurityAutoConfiguration](./img/SecurityAutoConfiguration3.png)
+![SecurityAutoConfiguration](../img/SecurityAutoConfiguration3.png)
 
 
 
 ##### SpringBootWebSecurityConfiguration 클래스
 
-![SecurityAutoConfiguration](./img/SecurityAutoConfiguration4.png)
+![SecurityAutoConfiguration](../img/SecurityAutoConfiguration4.png)
 
 
 
@@ -166,7 +166,7 @@ WebSecurityConfigurerAdapter는 스프링 시큐리티를 java기반의 설정�
 
 ##### WebSecurityConfigurerAdapter 클래스 내부 (1)
 
-![WebSecurityConfigurerAdapter](./img/WebSecurityConfigurerAdapter1.png)
+![WebSecurityConfigurerAdapter](../img/WebSecurityConfigurerAdapter1.png)
 
 위 코드는 WebSecurityConfigurerAdapter 클래스 내부의 코드이다. WebSecurityConfigurerAdapter클래스 내부에는 주요 메서드들이 있는데 이중 중요한 역할을 하는 메서드는 getHttp() 메서드이다. getHttp() 메서드 내의 
 
@@ -178,7 +178,7 @@ WebSecurityConfigurerAdapter는 스프링 시큐리티를 java기반의 설정�
 
 아래의 configure 메서드가 핵심이다.
 
-![WebSecurityConfigurerAdapter](./img/WebSecurityConfigurerAdapter2.png)
+![WebSecurityConfigurerAdapter](../img/WebSecurityConfigurerAdapter2.png)
 
 위의 코드를 SpringSecurity가 기본으로 그대로 제공해주는 것이고, 스프링 부트가 아무것도 하지 않았기 때문에 위의 코드가 동작하는 것이다. 
 
@@ -191,13 +191,13 @@ WebSecurityConfigurerAdapter는 스프링 시큐리티를 java기반의 설정�
 
 스프링 시큐리티가 뭔가 하는 것 같은 부분이 있는 부분은 사실 UserDetailsServiceAutoConfiguration이다. UserDetailServiceAutoConfiguration에서는 inMemoryUserDetailsManager에서 인메모리에 User 정보를 생성한다 .(자세한 내용 - Role 등등 은 공부를 해야 한다.)
 
-![UserDetailServiceAutoConfiguration](./img/UserDetailsServiceAutoConfiguration1.png)
+![UserDetailServiceAutoConfiguration](../img/UserDetailsServiceAutoConfiguration1.png)
 
 
 
 위에서 본 UserDetailsServiceAutoConfiguration클래스, 즉, UserDetailsService에 대한 자동설정이 적용되는 시점은
 
-![UserDetailsServiceAutoConfiguration](./img/UserDetailsServiceAutoConfiguration2.png)
+![UserDetailsServiceAutoConfiguration](../img/UserDetailsServiceAutoConfiguration2.png)
 
 UserDetailsService클래스가 ConditionalOnMissingBean 상태일 때, 즉, UserDetailsService 타입의 Bean이 등록되어 있지 않을때 UserDetailsServiceAutoConfiguration이 적용된다.
 

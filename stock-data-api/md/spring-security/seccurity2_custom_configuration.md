@@ -80,23 +80,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 인증되지 않은 사용자가 "/" 또는 "/hello" 외의 모든 URL에 대해서 아래의 페이지를 볼 수 있다.
 
-![root](./img/ex2_rooturl.png)
+![root](../img/ex2_rooturl.png)
 
 인증되지 않은 사용자도 "/hello" 페이지를 요청했을 때 아래와 같이 페이지를 볼수 있다.
 
-![hello](./img/ex2_hello.png)
+![hello](../img/ex2_hello.png)
 
 로그인을 하지 않았을때 그 외의 모든 경우는 아래와 같은 화면을 확인할 수 있다.
 
-![any](./img/ex2_my_redirected.png)
+![any](../img/ex2_my_redirected.png)
 
 로그인을 시도해보자
 
-![login_try](./img/login_try1.png)
+![login_try](../img/login_try1.png)
 
 아직까지는 user 정보를 추가하고, UserDetailsService와 연동하지 않았기 때문에 로그인에 실패한다.
 
-![login_try1](./img/login_try1_exception.png)
+![login_try1](../img/login_try1_exception.png)
 
   
 
