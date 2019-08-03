@@ -203,6 +203,7 @@ spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 > - @DataJpaTest 는 h2(인메모리 데이터베이스)로 동작한다.
 
 인메모리 데이터베이스가 더 가볍기 때문이라 한다. 
+실 운영 DB에도 영향을 줘서 값이 변하거나 하는 문제때문인지 그런지 추측도 된다..  
 
 ```java
 package com.share.data.api.playground.jpa.sampleuser;
