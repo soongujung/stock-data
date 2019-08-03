@@ -204,6 +204,11 @@ spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 
 인메모리 데이터베이스가 더 가볍기 때문이라 한다. 
 실 운영 DB에도 영향을 줘서 값이 변하거나 하는 문제때문인지 그런지 추측도 된다..  
+물론
+```text
+@SpringBootTest(properties="spring.datasource.url='xxxxxxx.xxx.x.'"
+```
+와 같이 사용해서 피할수도 있다. 하지만 테스트 시에는 인메모리 DB 사용을 적극권장하고 있다.  
 
 ```java
 package com.share.data.api.playground.jpa.sampleuser;
