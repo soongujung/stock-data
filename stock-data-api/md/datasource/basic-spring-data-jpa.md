@@ -26,11 +26,13 @@ MySQL ElasticSearch, Redis 등 다양한 저장소를 활용할 수 있도록 �
  스프링부트로 배우는 자바 웹 개발, 윤석진, jpub
  
 ## 어노테이션
+### @GeneratedValue
+  
 ### @Entity
 데이터베이스의 스키마의 내용을 자바 클래스로 표현할 수 있는 대상을 Entity 클래스라고 한다.  
 Entity 클래스는 해당 클래스에 @Entity 어노테이션을 선언하는 것으로 엔티티 매니저가 관리해야 할 대상임을 인식시킬수 있다.
 즉, 생성한 클래스를 ORM 매핑으로 Spring Data JPA와 연동시키기 위해서는 @Entity 어노테이션을 사용한다.  
-
+  
 ### @Table
 @Entity 어노테이션을 사용할 때 실제 테이블명과 클래스명이 다를 경우 @Table 어노테이션으로 실제 클래스명을 직접 지정할 수 있다.
 ```java
@@ -40,4 +42,86 @@ public class ConnTestEntity {
     
 }
 ```
- 
+  
+## 샘플로 정리하는 아주 기본적인 JPA 작성방식
+### Entity 란 ?
+테이블 하나의 컬럼을 클래스의 필드와 매핑시킨다. 주의할 점은 getter/setter가 있어야 데이터를 접근할 수 있다.  
+Getter/Setter는 Lombok을 통해 더 간소화 할수 있다.  
+
+#### ex) SampleUserEntity
+```java
+package com.share.data.api.playground.jpa.sampleuser;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "sample_user")
+public class SampleUserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String name;
+
+    private String vender; // oauth service 업체
+
+    public SampleUserEntity(){
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVender() {
+        return vender;
+    }
+
+    public void setVender(String vender) {
+        this.vender = vender;
+    }
+
+}
+``` 
+
+### Repository 란?
+Repository 는 Entity 단위로 데이터베이스 연산을 수행하는 역할을 한다. SQL 로 작성하던 것을 메서드로 사용하게 된다.  
+여기서는 개념에 대해 깊이 설명하기보다는 Repository를 생성하고 실행하는 방법만을 다룬다.
+
+#### 1) Repository 인터페이스 생성 (사용자 정의)
+1. JpaRepository<T, ID extends Serializable> 인터페이스를 상속하는 사용자 정의 Repository 인터페이스를 생성한다.    
+  즉, JpaRepository<SampleUserEntity, Long> 을 상속하는 SampleUserRepository 를 생성한다.
+  
+2. 그리고 Repository 내부에 쿼리를 실행할 수 잇는 메서드를 작성한다.  
+  만약 select ~ where 구문을 수행하고 싶다면 findBy\[Entity내의 필드명\](파라미터) 와 같이 기술한다.    
+  즉, SampleUserEntity에 정의한 name으로 특정 값을 가져오려면 _SampleUserEntity findByName (String name);_ 으로 작성하면 된다.
+
+#### ex) SampleUserRepository : JpaRepository<T, ID> 
+```java
+package com.share.data.api.playground.jpa.sampleuser;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface SampleUserRepository extends JpaRepository<SampleUserEntity, Long> {
+
+    public SampleUserEntity findByName(String name);
+}
+```
+

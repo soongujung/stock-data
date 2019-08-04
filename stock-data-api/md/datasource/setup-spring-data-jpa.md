@@ -85,7 +85,7 @@ public class ConnTestEntity {
 ```
 
 ### Repository
-Repository 는 Entity 단위로 데이터베이스 연산을 수행하는 역할을 한다. SQL로 작성하던 것을 메서드로 사용하게 된다.  
+Repository 는 Entity 단위로 데이터베이스 연산을 수행하는 역할을 한다. SQL 로 작성하던 것을 메서드로 사용하게 된다.  
 여기서는 개념에 대해 깊이 설명하기보다는 Repository를 생성하고 실행하는 방법만을 다룬다.
 
 #### 1) Repository 인터페이스 생성 (사용자 정의)
@@ -186,7 +186,7 @@ PgConnection이라는 jdbc Driver 관련 클래스에서 createClob() 메서드�
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 ```
 
-#### Datasourc 테스트
+#### 테스트코드 1) Datasourc 테스트
 현재 hikari Datasource를 프로젝트에 설정해놓았기 때문에 아래의 코드를 입력한다.
 > - DataSource에 @Qualifier로 명시적인 bean의 이름 (hikariDataSource)을 지정해주었다.    
   (bean 설정에서 name을 명시적으로 hikariDataSource로 지정했다.)  
@@ -208,7 +208,8 @@ spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 ```text
 @SpringBootTest(properties="spring.datasource.url='xxxxxxx.xxx.x.'"
 ```
-와 같이 사용해서 피할수도 있다. 하지만 테스트 시에는 인메모리 DB 사용을 적극권장하고 있다.  
+와 같이 실제 운영DB가 아닌 개발용 DB를 명시적으로 지정하여 피할수도 있다.  
+하지만 테스트 시에는 인메모리 DB 사용을 적극권장하고 있다.  
 
 ```java
 package com.share.data.api.playground.jpa.sampleuser;
@@ -329,13 +330,71 @@ jdbc:postgresql://localhost:5432/stock_data
 PostgreSQL JDBC Driver
 ```
 
-### 테스트 코드 2
+19분 대부터 다시
+### 테스트 코드 2) - Optional을 사용하여 Null 처리를 조금 더 우아하게
+java 버전을 8로 맞췄으니 Null 처리에 유용한 Optional 이라는 좋은 도구를 사용할 수 있다.  
+Optional을 적용한 Test 코드를 정리해본다.  
+assert 구문들은 Junit이 아닌 AssertJ의 메서드들을 사용했다.  
 
+> AssertJ의 assertThat등 assert 구문들에 대한 설명은  
+>  [JayTech의 기술블로그](https://pjh3749.tistory.com/241) 에 자세히 설명되어 있다. (추후 정리 예정...이다. ㅠㅜ)  
 
-### jpql, native query
+```java
+package com.share.data.api.playground.jpa.sampleuser;
 
+// ...
+// ...
+// ...
 
-### Optional
+import java.sql.SQLException;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class SampleUserRepositoryTest {
+
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    SampleUserRepository sampleUserRepository;
+    
+    // ...
+
+    @Test
+    public void repositoryTest() throws SQLException{
+
+        SampleUserEntity user = new SampleUserEntity();
+        user.setName("sgjung");
+        user.setVender("slack");
+
+        final SampleUserEntity savedUser = sampleUserRepository.save(user);
+
+        // junit.AssertThat이 import 되어 있다면 제거하고 AssertJ의 assertThat을 사용한다.
+//        assertThat(savedUser).isNotEmpty();
+        String savedName = Optional.ofNullable(savedUser)
+                .map(SampleUserEntity::getName)
+                .orElse("");
+
+        assertThat(savedName).isEqualTo("sgjung");
+
+        // 꿀팁... alt + enter (quick fix) 로 test 코드에서 Repository에 자동으로 메서드를 만든다.
+        Optional<SampleUserEntity> searchedData = sampleUserRepository.findByName(savedUser.getName());
+        assertThat(searchedData).isNotEmpty();
+
+        Optional<SampleUserEntity> searchedSlack = sampleUserRepository.findByName("slack");
+        assertThat(searchedSlack).isEmpty();
+
+    }
+
+}
+```  
+
 
 
 
