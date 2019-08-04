@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,22 +46,28 @@ public class SampleUserRepositoryTest {
 
     @Test
     public void repositoryTest() throws SQLException{
+
         SampleUserEntity user = new SampleUserEntity();
-//        user.setId(1);
         user.setName("sgjung");
         user.setVender("slack");
 
         final SampleUserEntity savedUser = sampleUserRepository.save(user);
 
         // junit.AssertThat이 import 되어 있다면 제거하고 AssertJ의 assertThat을 사용한다.
-        assertThat(savedUser).isNotNull();
+//        assertThat(savedUser).isNotEmpty();
+        String savedName = Optional.ofNullable(savedUser)
+                .map(SampleUserEntity::getName)
+                .orElse("");
+
+        assertThat(savedName).isEqualTo("sgjung");
 
         // 꿀팁... alt + enter (quick fix) 로 test 코드에서 Repository에 자동으로 메서드를 만든다.
-        SampleUserEntity data = sampleUserRepository.findByName(savedUser.getName());
-        assertThat(data).isNotNull();
+        Optional<SampleUserEntity> searchedData = sampleUserRepository.findByName(savedUser.getName());
+        assertThat(searchedData).isNotEmpty();
 
-        SampleUserEntity slack = sampleUserRepository.findByName("slack");
-        assertThat(data).isNull();
+        Optional<SampleUserEntity> searchedSlack = sampleUserRepository.findByName("slack");
+        assertThat(searchedSlack).isEmpty();
 
     }
+
 }
