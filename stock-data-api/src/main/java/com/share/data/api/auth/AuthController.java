@@ -5,6 +5,7 @@ import com.share.data.util.restclient.RestClient;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,15 @@ import java.util.Map;
 @Controller
 public class AuthController {
 
+    @Value("${slack.client-id}")
+    private String slackClientId;
+
+    @Value("${slack.client-secret}")
+    private String slackClientSecret;
+
+    @Value("${slack.oauth.authorize.base_url}")
+    private String oAuthAuthorizeBaseURL;
+
     @GetMapping("/")
     public String index(Model model){
         model.addAttribute("name", "sgjung");
@@ -25,9 +35,8 @@ public class AuthController {
     }
 
     /**
-     * client_id로 서버에서 slack에 콜,
-     * 리턴값으로 slack api 주소가 오는지 확인해야 하고
-     * 온다면 그 주소로 redirect 시킨다.
+     * STEP 1) Authorization Request -> Authorization Grant
+     *  client_id, scope 로 client id 에 대한 User Server (Resource Owner) 로 리다이렉트 요청
      */
     @GetMapping(value = "/auth/slack/proxy/grant")
     public void requestRedirect(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -39,11 +48,9 @@ public class AuthController {
                 .append("?")
                     .append("scope=").append("identity.basic")
                 .append("&")
-                    .append("client_id=").append(clientId);
+                    .append("client_id=").append(slackClientId);
 
         System.out.println(sbRedirectUrl.toString());
-
-//        response.setHeader("Access-Control-Allow-Origin", "*");
 
         // TODO :: 추후 적용 (REDIRECT 후에도 URL에 CLIENT ID 가 남는 문제...)
 //        RequestDispatcher rd = request.getRequestDispatcher("/");
@@ -52,6 +59,29 @@ public class AuthController {
         response.sendRedirect(sbRedirectUrl.toString());
     }
 
+    /**
+     * STEP 2) Authorization Grant -> Access Token
+     *  2-1) User Resource Server 에서 사용자를 미리 등록해놓은 우리측 redirected 페이지로 이동시켜주는데 이때 code라는 임시값을 우리측에 발급해준다.
+     *
+     *  2-2) User Resource Server 에서 얻은 임시값인 code와 client_secret, client_id를 get parameter로 조합해 oauth.access에 질의를 던진다.
+     *      요청이 성공하면 access_token 을 얻는다.
+     *
+     *      참고)
+     *      access_token을 얻고나면 /auth/slack/proxy/redirected 로 또 리다이렉트 되는데 이때 code라는 파라미터가 url에 달려서 온다.
+     *      https://slack.com/api/oauth.access?code=680595488112.715091735572.39e0e4d4c76db70c53347491f41cd0a62ac3f3eccac53428867dc60e4cd98b9e&client_id=680595488112.691875062899&client_secret=f44c1e5af174e4fbe7ed2c09b6de85cf
+     *      요청이 끝나고 같이 테스트 해보면 {"ok":false,"error":"code_already_used"} 메시지를 접하게 된다.
+     *
+     *  --- 읭? 아래 내용은 내가 졸면서 쓴건가 ....  ---
+     *  리턴값으로 slack api 주소가 오는지 확인해야 하고
+     *  온다면 그 주소로 redirect 시킨다.
+     * @param code
+     * @param state
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
     @GetMapping(value = "/auth/slack/proxy/redirected", produces = "application/x-www-form-urlencoded")
     public @ResponseBody Object slackProxyRedirect( @RequestParam("code") String code,
@@ -62,18 +92,15 @@ public class AuthController {
         final String client_id = "680595488112.691875062899";
         final String BASE_URL = "http://slack.com/api/oauth.access";
 
-//        System.out.println("request >>> " + request);
-        System.out.println("response :: " + response );
-
         StringBuffer sbUrl = new StringBuffer();
 
         sbUrl.append(BASE_URL)
                 .append("?")
             .append("code=").append(code)
                 .append("&")
-            .append("client_id=").append(client_id)
+            .append("client_id=").append(slackClientId)
                 .append("&")
-            .append("client_secret=").append(client_secret);
+            .append("client_secret=").append(slackClientSecret);
 
         final String reqUrl = sbUrl.toString();
 
@@ -89,43 +116,21 @@ public class AuthController {
         System.out.println("access_token >>> " + jsonObject.get("access_token"));
 
         /**
-         * 성공시 home.html
-         * 실페시 index.html
+         * 인증 성공여부 판단 로직 작성
+         * 응답 형식 : {"ok":false,"error":"code_already_used"}
+         *
+         * 성공
+         * jsonObject 내의 ok가 true 이면서 error 를 key로 contains 하지 않을 경우
+         *
+         * 실패
+         * jsonObject 내의 ok가 false 이면서 error를 key로 가지고 있고 에러메시지 문자열값이 있는 경우
+         */
+
+        /**
+         * 성공시 home.html 로 redirect
+         * 실페시 index.html 로 redirect ( Sign in With Slack ) 이 있는 부분으로
          */
         return null;
-    }
-
-
-    /**
-     * 이전코드 (테스트용)
-     * @param code
-     * @param state
-     * @param request
-     * @param response
-     * @param model
-     * @return
-     */
-    @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
-    @GetMapping(value = "/auth/slack/redirect/result", produces = "application/x-www-form-urlencoded")
-    public String redirect(@RequestParam("code") String code , @RequestParam("state") String state,
-                           HttpServletRequest request, HttpServletResponse response, Model model){
-        System.out.println("code    :: " + code);
-        System.out.println("state   :: " + state);
-
-//        response.setHeader("Accept-Encoding", request.getHeader("Accept-Encoding"));
-////        response.setHeader("Content-Encoding", "gzip");
-//        response.setHeader("Accept", request.getHeader("Accept"));
-//        response.setHeader("access-control-allow-origin:", request.getHeader("*"));
-//        response.setHeader("content-type", "application/json; charset=utf-8");
-
-        model.addAttribute("code", code);
-        model.addAttribute("state", state);
-        return "test-slack-signin";
-    }
-
-    @GetMapping("/auth/slack/redirect2")
-    public String redirect2(){
-        return "test-slack-signin2";
     }
 
 }
