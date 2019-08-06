@@ -86,7 +86,7 @@ public class AuthController {
      */
     @CrossOrigin(origins = {"http://slack.com", "https://slack.com"})
     @GetMapping(value = "/auth/slack/proxy/redirected", produces = "application/x-www-form-urlencoded")
-    public @ResponseBody Object slackProxyRedirect( @RequestParam("code") String code,
+    public String slackProxyRedirect( @RequestParam("code") String code,
                                                     @RequestParam("state") String state,
                                 HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
 
@@ -128,11 +128,28 @@ public class AuthController {
          * jsonObject 내의 ok가 false 이면서 error를 key로 가지고 있고 에러메시지 문자열값이 있는 경우
          */
 
+        boolean isOk = Boolean.valueOf(String.valueOf(jsonObject.get("ok")));
+        boolean isAccessSuccess = false;
+
+        String errMsg = "";
+
+        if(isOk){
+            isAccessSuccess = true;
+        }
+        else{
+            errMsg = String.valueOf(jsonObject.get("error"));
+        }
+
         /**
          * 성공시 home.html 로 redirect
          * 실페시 index.html 로 redirect ( Sign in With Slack ) 이 있는 부분으로
          */
-        return null;
+        if(isAccessSuccess){
+            return "home";
+        }
+        else{
+            return "index";
+        }
     }
 
 }
