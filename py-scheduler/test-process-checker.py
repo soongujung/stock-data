@@ -4,11 +4,20 @@ import time
 
 
 def increment():
+    """
+        count increment
+    :return:
+    """
     global count
     count += 1
 
 
-def print_task(**kwargs):
+def interval_task():
+    """
+        interval 수행 동작
+    :return:
+    """
+    # TODO 이 부분 데코레이터로 변경할 것
     increment()
     print(datetime.now())
 
@@ -18,7 +27,7 @@ count = 0
 
 if __name__ == '__main__':
 
-    sch.add_job(print_task, 'interval', seconds=1)
+    sch.add_job(interval_task, 'interval', seconds=1)
     sch.start()
 
     try:
@@ -26,8 +35,9 @@ if __name__ == '__main__':
             time.sleep(0)
             if count >= 10:
                 print("break")
+                sch.shutdown()
                 break
 
     except(KeyboardInterrupt, SystemExit):
-        print("Exception Occured")
+        print("Exception occurred")
         sch.shutdown()
