@@ -43,7 +43,12 @@ def send_request2():
 
 
 def interval_task():
-    # print(datetime.now())
+    """
+    입력 작업 종류
+        1. mq process check
+        2. port check (614)
+        3. port check (616)
+    """
     send_request({"text": "interval data"})
 
 
