@@ -49,7 +49,23 @@ def interval_task():
         2. port check (614)
         3. port check (616)
     """
-    send_request({"text": "interval data"})
+
+    send_request({"text": "---------------------------"})
+    send_request({"text": str(datetime.now().strftime("%Y/%m/%d %H:%M:%S, %A"))})
+    l_result = check_mq_process()
+    str_result = "".join(l_result)
+    send_request({"text": str_result})
+
+    l_result = check_614_port()
+    str_result = "".join(l_result)
+    send_request({"text": str_result})
+
+    l_result = check_616_port()
+    str_result = "".join(l_result)
+    send_request({"text": str_result})
+    send_request({"text": "---------------------------"})
+
+    # send_request({"text": "interval data"})
 
 
 # connect ssh
@@ -68,6 +84,10 @@ def connect_to_server():
 
 
 def check_mq_process():
+    """
+    프로세스 상태 확인
+    :return:
+    """
     print("\n\n")
     print("==================")
     print("check whether messaging process alive .... ")
@@ -77,17 +97,76 @@ def check_mq_process():
     UID     PID     PPID    C   STIME   TTY     CMD
     root    1       0       0   2018    ?       /usr/local/java/bin/java Xms512M Xmx1G ...... xxx.jar start
     """
+    l_result = ["\n *MQ 프로세스 (ps -ef result) >>>* \n"]
+
     stdin, stdout, stderr = ssh.exec_command('ps -ef | grep activemq')
     for line in stdout.read().splitlines():
         line = line.decode('utf-8')
         if line.find('ps -ef') >= 0 or line.find('grep') >= 0:
             continue
         print(line)
+        l_result.append(line)
+
+    l_result.append("\n *MQ 서비스 확인 (systemctl status active) >>> * \n")
+    stdin, stdout, stderr = ssh.exec_command('systemctl status active')
+    for line in stdout.read().splitlines():
+        line = line.decode('utf-8')
+        if line.find('ps -ef') >= 0 or line.find('grep') >= 0:
+            continue
+        print(line)
+        l_result.append(line)
+
+    return l_result
+
+
+def check_614_port():
+    """
+    웹 연동 MQ 포트 확인
+    :return:
+    """
+    print("\n\n")
+    print("==================")
+    print("check whether messaging port is listening.... (outbound)")
+    print("==================")
+
+    """
+    COMMAND     PID   USER   FD   TYPE    DEVICE SIZE/OFF NODE NAME
+    """
+    l_result = ["\n *웹 연동 MQ 포트(614) 확인* \n"]
+    
+    stdin, stdout, stderr = ssh.exec_command('lsof -i -nP | grep 61614')
+
+    for line in stdout.read().splitlines():
+        line = line.decode('utf-8')
+        l_result.append(line)
+
+    return l_result
+
+
+def check_616_port():
+    """
+    내부 MQ 포트 확인
+    :return:
+    """
+    print("\n\n")
+    print("==================")
+    print("check whether messaging port is listening.... (inbound)")
+    print("==================")
+    l_result = ["\n *내부 MQ 포트(616) 확인* \n"]
+
+    stdin, stdout, stderr = ssh.exec_command('lsof -i -nP | grep 61616')
+
+    for line in stdout.read().splitlines():
+        line = line.decode('utf-8')
+        l_result.append(line)
+
+    return l_result
 
 
 if __name__ == '__main__':
 
-    sch.add_job(interval_task, 'interval', seconds=3)
+    connect_to_server()
+    sch.add_job(interval_task, 'interval', minutes=30)
     sch.start()
 
     try:
