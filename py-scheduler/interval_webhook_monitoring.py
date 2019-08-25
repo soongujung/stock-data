@@ -164,8 +164,8 @@ def check_616_port():
 
 
 if __name__ == '__main__':
-
     connect_to_server()
+    interval_task()
     sch.add_job(interval_task, 'interval', minutes=30)
     sch.start()
 
