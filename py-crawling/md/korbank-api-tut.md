@@ -151,3 +151,42 @@ if __name__ == '__main__':
 
 
 
+## urllib3를 이용해 api 크롤링 해보기
+
+api의 데이터를 크롤링 하기 위해서라면 python에서는 단 몇줄의 코드만을 작성하면 된다.  
+
+초기 개발시 프레임워크 없이 스크립트만으로 뭔가를 셋업해놓고자 할 때 굉장히 유용하다.  
+
+
+
+### 의존성 추가
+
+requirments.txt
+
+```txt
+urllib3==1.25.3
+```
+
+또는
+
+```bash
+$ pip install urllib3 
+$ pip freeze > requirements.txt
+```
+
+
+
+### 코드
+
+설명은 추후 추가  
+
+```python
+    url = "http://ecos.bok.or.kr/api/StatisticSearch/[api키]/json/kr/1/10/028Y015/MM/201901/201906/1070000/"
+    http = urllib3.PoolManager()
+    ret = http.request("GET", url, headers={'Content-Type': 'application/json'})
+    str_response = ret.data.decode('utf-8')
+    dict_data = json.loads(str_response)
+```
+
+
+
