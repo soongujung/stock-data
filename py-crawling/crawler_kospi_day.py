@@ -42,7 +42,7 @@ if __name__ == '__main__':
     cursor = conn.cursor()
 
     # --  api 크롤링
-    url = "http://ecos.bok.or.kr/api/StatisticSearch/[api키]/json/kr/1/31/064Y001/DD/20190101/20190131/"
+    url = "http://ecos.bok.or.kr/api/StatisticSearch/[api키]/json/kr/1/365/064Y001/DD/20180101/20181231/0001000"
     http = urllib3.PoolManager()
     ret = http.request("GET", url, headers={'Content-Type': 'application/json'})
 
