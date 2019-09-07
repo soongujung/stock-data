@@ -45,10 +45,8 @@ if __name__ == '__main__':
     url = "http://ecos.bok.or.kr/api/StatisticSearch/RV1NS82MWHJGX93N28C2/json/kr/1/10/028Y015/MM/201901/201906/1070000/"
     http = urllib3.PoolManager()
     ret = http.request("GET", url, headers={'Content-Type': 'application/json'})
-    print('=======================\n')
-    print('     HTTP RESULT         ')
-    print('=======================\n')
 
+    print("REST API RESULT ===== ")
     str_response = ret.data.decode('utf-8')
     dict_data = json.loads(str_response)
     arr_data = dict_data['StatisticSearch']['row']
@@ -64,6 +62,7 @@ if __name__ == '__main__':
                            schema='public')
 
     df_kospi_month = pandas_sql.read_sql_query("select * from stock_kospi_month", alchemy_conn)
+    print("database result ::: stock_kospi_month")
     print(df_kospi_month)
 
 
