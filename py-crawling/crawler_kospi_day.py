@@ -42,7 +42,7 @@ if __name__ == '__main__':
     cursor = conn.cursor()
 
     # --  api 크롤링
-    url = "http://ecos.bok.or.kr/api/StatisticSearch/[api키]/json/kr/1/10/028Y015/MM/201901/201906/1070000/"
+    url = "http://ecos.bok.or.kr/api/StatisticSearch/[api키]/json/kr/1/31/064Y001/DD/20190101/20190131/"
     http = urllib3.PoolManager()
     ret = http.request("GET", url, headers={'Content-Type': 'application/json'})
 
@@ -55,13 +55,13 @@ if __name__ == '__main__':
     print('df_kospi_insert : ' + df_kospi_insert)
 
     # -- database insert/select
-    df_kospi_insert.to_sql(name='stock_kospi_month',
+    df_kospi_insert.to_sql(name='stock_kospi_day',
                            con=alchemy_conn,
                            index=False,
                            if_exists='replace', #{'fail', 'replace', 'append'}, default : fail
                            schema='public')
 
-    df_kospi_month = pandas_sql.read_sql_query("select * from stock_kospi_month", alchemy_conn)
+    df_kospi_month = pandas_sql.read_sql_query("select * from stock_kospi_day", alchemy_conn)
     print("database result ::: stock_kospi_month")
     print(df_kospi_month)
 
