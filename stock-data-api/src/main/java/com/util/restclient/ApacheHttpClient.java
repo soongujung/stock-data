@@ -1,4 +1,4 @@
-package com.share.data.util.restclient;
+package com.util.restclient;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;

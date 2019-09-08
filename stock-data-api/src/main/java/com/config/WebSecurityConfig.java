@@ -1,4 +1,4 @@
-package com.share.data.config;
+package com.config;
 
 import com.share.data.api.auth.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * 커스텀 스프링 부트 시큐리티 설정
@@ -42,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/about",
                                 "/auth/slack/redirect/**", "/auth/slack/proxy/**",
                                 "/api/test/**",
+                                "/trending/web/**",
                                 "/static/**")
                 .permitAll() // '/'와 /hello 에 해당하는 페이지는 모든 사용자가 볼 수 있도록 허용
                 .anyRequest().authenticated()       // 그 외의 모든 요청은 authentication이 필요하다.

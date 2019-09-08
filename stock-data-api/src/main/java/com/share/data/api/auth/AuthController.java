@@ -1,7 +1,6 @@
 package com.share.data.api.auth;
 
-import com.share.data.util.restclient.ApacheHttpClient;
-import com.share.data.util.restclient.RestClient;
+import com.util.restclient.ApacheHttpClient;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,11 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @Controller
 @PropertySource(value = {"classpath:${oauth-slack.config}"})

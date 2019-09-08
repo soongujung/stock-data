@@ -1,4 +1,4 @@
-package com.share.data;
+package com;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
