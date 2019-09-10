@@ -3,16 +3,50 @@ package com.types.date.localdate;
 import java.time.format.DateTimeFormatter;
 
 public enum FormatterTypes {
-    YYYYMMDD(1, "YYYYMMDD"){
 
+    YYYYMMDD(1, "YYYYMMDD"){
+        @Override
+        public DateTimeFormatter processDashFormat() {
+            return null;
+        }
+
+        @Override
+        public DateTimeFormatter processSlashFormat() {
+            return null;
+        }
     },
     YYYYMMDDHH(2, "YYYYMMDDHH"){
+        @Override
+        public DateTimeFormatter processDashFormat() {
+            return null;
+        }
 
+        @Override
+        public DateTimeFormatter processSlashFormat() {
+            return null;
+        }
     },
     YYYYMMDDHHMI(3, "YYYYMMDDHHMI"){
+        @Override
+        public DateTimeFormatter processDashFormat() {
+            return null;
+        }
 
+        @Override
+        public DateTimeFormatter processSlashFormat() {
+            return null;
+        }
     },
     YYYYMMDDHHMISS(4, "YYYYMMDDHHMISS"){
+        @Override
+        public DateTimeFormatter processDashFormat() {
+            return null;
+        }
+
+        @Override
+        public DateTimeFormatter processSlashFormat() {
+            return null;
+        }
 
     };
 
@@ -27,6 +61,9 @@ public enum FormatterTypes {
     public DateTimeFormatter getDateTimeFormatter(){
         return DateTimeFormatter.ofPattern(this.getFormat());
     }
+
+    public abstract DateTimeFormatter processDashFormat();
+    public abstract DateTimeFormatter processSlashFormat();
 
     public int getFormatterTypeCd() {
         return formatterTypeCd;
