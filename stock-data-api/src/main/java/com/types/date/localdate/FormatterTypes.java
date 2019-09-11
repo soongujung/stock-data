@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 
 public enum FormatterTypes {
 
-    YYYYMMDD(1, "YYYYMMDD"){
+    YYYYMMDD(1, "yyyyMMdd"){
         @Override
         public DateTimeFormatter processDashFormat() {
             return null;
@@ -15,7 +15,7 @@ public enum FormatterTypes {
             return null;
         }
     },
-    YYYYMMDDHH(2, "YYYYMMDDHH"){
+    YYYYMMDDHH(2, "yyyyMMddhh"){
         @Override
         public DateTimeFormatter processDashFormat() {
             return null;
@@ -26,7 +26,7 @@ public enum FormatterTypes {
             return null;
         }
     },
-    YYYYMMDDHHMI(3, "YYYYMMDDHHMI"){
+    YYYYMMDDHHMI(3, "yyyyMMddhhmm"){
         @Override
         public DateTimeFormatter processDashFormat() {
             return null;
@@ -37,7 +37,7 @@ public enum FormatterTypes {
             return null;
         }
     },
-    YYYYMMDDHHMISS(4, "YYYYMMDDHHMISS"){
+    YYYYMMDDHHMISS(4, "yyyyMMddhhmmss"){
         @Override
         public DateTimeFormatter processDashFormat() {
             return null;
@@ -64,6 +64,10 @@ public enum FormatterTypes {
 
     public abstract DateTimeFormatter processDashFormat();
     public abstract DateTimeFormatter processSlashFormat();
+
+    public DateTimeFormatter ofPattern(){
+        return DateTimeFormatter.ofPattern(getFormat());
+    }
 
     public int getFormatterTypeCd() {
         return formatterTypeCd;
