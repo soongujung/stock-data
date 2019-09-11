@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>trending kospi and others</title>
@@ -9,6 +9,7 @@
     <script src="/static/assets/js/charts/amcharts_4.5.16/amcharts4/themes/material.js"></script>
     <script src="/static/assets/js/charts/amcharts_4.5.16/amcharts4/themes/animated.js"></script>
     <script src="/static/assets/js/charts/amcharts_4.5.16/amcharts4/lang/ko_KR.js"></script>
+    <script src="/static/assets/js/date/moment.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -22,67 +23,95 @@
     </style>
 </head>
 <body>
-<div id="myChart" class="chart--container"><a class="zc-ref" href="https://www.zingchart.com/">Powered by ZingChart</a></div>
+<div id="myChart" class="chart--container"></div>
 
 </body>
-<script>
-	// Themes begin
-	am4core.useTheme(am4themes_animated);
-	// Themes end
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var kospiResult = JSON.parse(/*[[${kospiResult}]]*/ null);
+	var startDate = /*[[${startDate}]]*/ null;
+	var endDate = /*[[${endDate}]]*/ null;
+	/*]]>*/
+    console.log(kospiResult);
 
-	// Create chart instance
-	var chart = am4core.create("myChart", am4charts.XYChart);
+    renderChart(kospiResult);
 
-	// Add data
-	chart.data = generateChartData();
+    function renderChart(sqlResult){
+	    // Themes begin
+	    am4core.useTheme(am4themes_animated);
+	    // Themes end
 
-	// Create axes
-	var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-	dateAxis.renderer.minGridDistance = 50;
+	    // Create chart instance
+	    var chart = am4core.create("myChart", am4charts.XYChart);
 
-	var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+	    // Add data
+	    chart.data = generateChartData();
 
-	// Create series
-	var series = chart.series.push(new am4charts.LineSeries());
-	series.dataFields.valueY = "visits";
-	series.dataFields.dateX = "date";
-	series.strokeWidth = 2;
-	series.minBulletDistance = 10;
-	series.tooltipText = "{valueY}";
-	series.tooltip.pointerOrientation = "vertical";
-	series.tooltip.background.cornerRadius = 20;
-	series.tooltip.background.fillOpacity = 0.5;
-	series.tooltip.label.padding(12,12,12,12)
+	    // Create axes
+	    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+	    dateAxis.renderer.minGridDistance = 50;
 
-	// Add scrollbar
-	chart.scrollbarX = new am4charts.XYChartScrollbar();
-	chart.scrollbarX.series.push(series);
+	    var valueAxisWon = chart.yAxes.push(new am4charts.ValueAxis());
+	    valueAxisWon.title.dy = -10;
+	    valueAxisWon.renderer.opposite = false;
+	    valueAxisWon.title.fontWeight = 600;
+	    valueAxisWon.title.fontSize = 14;
+	    // valueAxisWon.title.paddingRight = 0;
+	    // valueAxisWon.title.paddingBottom = 400;
+	    valueAxisWon.tooltip.disabled = true;
+	    valueAxisWon.title.text = "원";
+	    valueAxisWon.title.rotation = 0;
+	    valueAxisWon.title.align = "top";
+	    valueAxisWon.renderer.grid.template.strokeOpacity = 0;
+	    valueAxisWon.renderer.grid.template.disabled = true;
 
-	// Add cursor
-	chart.cursor = new am4charts.XYCursor();
-	chart.cursor.xAxis = dateAxis;
-	chart.cursor.snapToSeries = series;
+	    chart.yAxes.push(valueAxisWon);
 
-	function generateChartData() {
-		var chartData = [];
-		var firstDate = new Date();
-		firstDate.setDate(firstDate.getDate() - 1000);
-		var visits = 1200;
-		for (var i = 0; i < 500; i++) {
-			// we create date objects here. In your data, you can have date strings
-			// and then set format of your dates using chart.dataDateFormat property,
-			// however when possible, use date objects, as this will speed up chart rendering.
-			var newDate = new Date(firstDate);
-			newDate.setDate(newDate.getDate() + i);
+	    // Create series
+	    var seriesLineKospi = chart.series.push(new am4charts.LineSeries());
+	    seriesLineKospi.dataFields.valueY = "kospi";
+	    seriesLineKospi.dataFields.dateX = "date";
+	    seriesLineKospi.strokeWidth = 2;                    // 선의 굵기
+	    seriesLineKospi.minBulletDistance = 10;
+        seriesLineKospi.stroke = am4core.color('#339af0');  // 선의 색상
+        seriesLineKospi.fill = am4core.color('#339af0');    // 선의 내부
+        seriesLineKospi.tensionX = 0.8;
 
-			visits += Math.round((Math.random()<0.5?1:-1)*Math.random()*10);
+	    seriesLineKospi.tooltipText = "kospi : {valueY.value} (원)";
+	    seriesLineKospi.tooltip.pointerOrientation = "vertical";
+	    seriesLineKospi.tooltip.getFillFromObject = false;
+	    seriesLineKospi.tooltip.label.fill = am4core.color('#339af0');      // 툴팁 내부 폰트 색상
+	    // seriesLineKospi.tooltip.background.fill = am4core.color('#339af0');
+	    seriesLineKospi.tooltip.background.cornerRadius = 20;               // 툴팁 테두리 Radius
+	    seriesLineKospi.tooltip.background.fillOpacity = 0.8;               // 툴팁 투명도
+	    seriesLineKospi.tooltip.label.padding(12,12,12,12);
 
-			chartData.push({
-				date: newDate,
-				visits: visits
-			});
-		}
-		return chartData;
-	}
+	    seriesLineKospi.yAxis = valueAxisWon;
+
+	    // Add scrollbar
+	    chart.scrollbarX = new am4charts.XYChartScrollbar();
+	    chart.scrollbarX.series.push(seriesLineKospi);
+
+	    // Add cursor
+	    chart.cursor = new am4charts.XYCursor();
+	    chart.cursor.xAxis = dateAxis;
+	    // chart.cursor.snapToSeries = seriesLineKospi;
+
+	    function generateChartData() {
+	    	var chartData = [];
+
+	    	sqlResult.forEach(function(obj, i){
+                var date = new Date(obj.time+"");
+
+                chartData.push({
+                    date: date,
+                    kospi: obj.kospi ? obj.kospi : null
+                })
+            });
+
+	    	return chartData;
+	    }
+    }
+
 </script>
 </html>
