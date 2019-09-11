@@ -7,12 +7,12 @@ public enum FormatterTypes {
     YYYYMMDD(1, "yyyyMMdd"){
         @Override
         public DateTimeFormatter processDashFormat() {
-            return null;
+            return DateTimeFormatter.ofPattern("yyyy-MM-dd");
         }
 
         @Override
         public DateTimeFormatter processSlashFormat() {
-            return null;
+            return DateTimeFormatter.ofPattern("yyyy/MM/dd");
         }
     },
     YYYYMMDDHH(2, "yyyyMMddhh"){
