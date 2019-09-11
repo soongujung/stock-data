@@ -14,9 +14,8 @@
                 interval '1 day'
             )   AS UNIT
         )
-        SELECT  TO_CHAR(y.UNIT, 'YYYYMMDD') AS UNIT,
-                k."DATA_VALUE",
-                k."ITEM_NAME1"
+        SELECT  TO_CHAR(y.UNIT, 'YYYY-MM-DD') AS time,
+                k."DATA_VALUE"  AS KOSPI
         FROM SEARCH_SERIES y
         LEFT OUTER JOIN stock_kospi_day k
         ON TO_CHAR(y.unit::DATE, 'YYYYMMDD') = k."TIME"
