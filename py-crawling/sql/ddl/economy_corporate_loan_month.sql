@@ -1,4 +1,4 @@
-create table economy_exchange_rate_day
+create table economy_corporate_loan_month
 (
   stat_name  varchar(40),
   stat_code  varchar(20),
@@ -10,15 +10,15 @@ create table economy_exchange_rate_day
   item_name3 varchar(20),
   data_value varchar(20),
   time       varchar(14) not null
-    constraint economy_exchange_rate_day_pk
+    constraint economy_corporate_loan_month_pk
       primary key
 );
 
-alter table economy_exchange_rate_day
+alter table economy_corporate_loan_month
   owner to postgres;
 
-create index economy_exchange_rate_day_time_index
-  on economy_exchange_rate_day (time);
+create index economy_corporate_loan_month_time_index
+  on economy_corporate_loan_month (time);
 
 commit;
 
