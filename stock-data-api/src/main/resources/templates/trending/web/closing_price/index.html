@@ -29,12 +29,13 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var kospiResult = JSON.parse(/*[[${kospiResult}]]*/ null);
+	var trendingResult = JSON.parse(/*[[${trendingResult}]]*/ null);
 	var startDate = /*[[${startDate}]]*/ null;
 	var endDate = /*[[${endDate}]]*/ null;
 	/*]]>*/
-    console.log(kospiResult);
+    console.log(trendingResult);
 
-    renderChart(kospiResult);
+    renderChart(trendingResult);
 
     function renderChart(sqlResult){
 	    // Themes begin
@@ -51,7 +52,9 @@
 	    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
 	    dateAxis.renderer.minGridDistance = 50;
 
-	    var valueAxisWon = chart.yAxes.push(new am4charts.ValueAxis());
+	    var valueAxisWon = new am4charts.ValueAxis();
+        chart.yAxes.push(valueAxisWon);
+
 	    valueAxisWon.title.dy = -10;
 	    valueAxisWon.renderer.opposite = false;
 	    valueAxisWon.title.fontWeight = 600;
@@ -65,32 +68,40 @@
 	    valueAxisWon.renderer.grid.template.strokeOpacity = 0;
 	    valueAxisWon.renderer.grid.template.disabled = true;
 
-	    chart.yAxes.push(valueAxisWon);
+	    var valueAxisWonExchange = new am4charts.ValueAxis();
+	    chart.yAxes.push(valueAxisWonExchange);
+
+	    valueAxisWonExchange.title.dy = -10;
+	    valueAxisWonExchange.renderer.opposite = false;
+	    valueAxisWonExchange.title.fontWeight = 600;
+	    valueAxisWonExchange.title.fontSize = 14;
+	    valueAxisWonExchange.tooltip.disabled = true;
+	    valueAxisWonExchange.title.text = "환율 (원)";
+	    valueAxisWonExchange.title.rotation = 0;
+	    valueAxisWonExchange.title.align = "top";
+	    valueAxisWonExchange.renderer.grid.template.strokeOpacity = 0;
+	    valueAxisWonExchange.renderer.grid.template.disabled = true;
+
+	    var valueAxisPercent = new am4charts.ValueAxis();
+	    chart.yAxes.push(valueAxisPercent);
+
+	    valueAxisPercent.title.dy = -10;
+	    valueAxisPercent.renderer.opposite = true;
+
+	    valueAxisPercent.title.fontWeight = 600;
+	    valueAxisPercent.title.fontSize = 14;
+	    valueAxisPercent.tooltip.disabled = true;
+	    valueAxisPercent.title.text = "%";
+	    valueAxisPercent.title.rotation = 0;
+	    valueAxisPercent.title.align = "top";
+	    valueAxisPercent.renderer.grid.template.strokeOpacity = 0;
+	    valueAxisPercent.renderer.grid.template.disabled = true;
 
 	    // Create series
-	    var seriesLineKospi = chart.series.push(new am4charts.LineSeries());
-	    seriesLineKospi.dataFields.valueY = "kospi";
-	    seriesLineKospi.dataFields.dateX = "date";
-	    seriesLineKospi.strokeWidth = 2;                    // 선의 굵기
-	    seriesLineKospi.minBulletDistance = 10;
-        seriesLineKospi.stroke = am4core.color('#339af0');  // 선의 색상
-        seriesLineKospi.fill = am4core.color('#339af0');    // 선의 내부
-        seriesLineKospi.tensionX = 0.8;
-
-	    seriesLineKospi.tooltipText = "kospi : {valueY.value} (원)";
-	    seriesLineKospi.tooltip.pointerOrientation = "vertical";
-	    seriesLineKospi.tooltip.getFillFromObject = false;
-	    seriesLineKospi.tooltip.label.fill = am4core.color('#339af0');      // 툴팁 내부 폰트 색상
-	    // seriesLineKospi.tooltip.background.fill = am4core.color('#339af0');
-	    seriesLineKospi.tooltip.background.cornerRadius = 20;               // 툴팁 테두리 Radius
-	    seriesLineKospi.tooltip.background.fillOpacity = 0.8;               // 툴팁 투명도
-	    seriesLineKospi.tooltip.label.padding(12,12,12,12);
-
-	    seriesLineKospi.yAxis = valueAxisWon;
-
-	    // Add scrollbar
-	    chart.scrollbarX = new am4charts.XYChartScrollbar();
-	    chart.scrollbarX.series.push(seriesLineKospi);
+	    var seriesLineKospi = createLineSeries(chart, valueAxisWon, "kospi", "date", "#339af0", "kospi : {valueY.value} (원)");
+	    var seriesLineExcangeRate = createLineSeries(chart, valueAxisWonExchange, "exchange_rate_dollar", "date", "#d9480f", "환율 : {valueY.value} (원)");
+	    var corporate_loan = createLineSeries(chart, valueAxisPercent, "corporate_loan_month", "date", "#51cf66", "대출 금리(기업) : {valueY.value} (%)");
+	    var household_loan_month = createLineSeries(chart, valueAxisPercent, "household_loan_month", "date", "#868e96", "대출 금리(가계) : {valueY.value} (%)");
 
 	    // Add cursor
 	    chart.cursor = new am4charts.XYCursor();
@@ -105,12 +116,42 @@
 
                 chartData.push({
                     date: date,
-                    kospi: obj.kospi ? obj.kospi : null
-                })
+                    kospi: obj.kospi ? obj.kospi : null,
+	                exchange_rate_dollar: obj.exchange_rate_dollar ? obj.exchange_rate_dollar : null,
+	                corporate_loan_month: obj.corporate_loan_month ? obj.corporate_loan_month : null,
+	                household_loan_month: obj.household_loan_month ? obj.household_loan_month : null
+                });
             });
 
 	    	return chartData;
 	    }
+    }
+
+    function createLineSeries(chart, valueAxis, valueColumn, dateColumn, color, tooltipText){
+	    var seriesLine = new am4charts.LineSeries();
+	    chart.series.push(seriesLine);
+
+	    seriesLine.dataFields.valueY = valueColumn;
+	    seriesLine.dataFields.dateX = dateColumn;
+	    seriesLine.strokeWidth = 2;                     // 선의 굵기
+	    seriesLine.minBulletDistance = 10;
+	    seriesLine.stroke = am4core.color(color);       // 선의 색상
+	    seriesLine.fill = am4core.color(color);         // 선의 내부
+	    seriesLine.tensionX = 0.8;
+
+	    seriesLine.tooltipText = tooltipText;
+	    seriesLine.tooltip.pointerOrientation = "vertical";
+	    seriesLine.tooltip.getFillFromObject = false;
+	    seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
+	    seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
+	    seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
+	    seriesLine.tooltip.label.padding(12,12,12,12);
+
+	    seriesLine.yAxis = valueAxis;
+	    // Add scrollbar
+	    chart.scrollbarX = new am4charts.XYChartScrollbar();
+	    chart.scrollbarX.series.push(seriesLine);
+	    return seriesLine;
     }
 
 </script>

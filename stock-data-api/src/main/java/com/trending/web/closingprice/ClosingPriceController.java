@@ -32,7 +32,7 @@ public class ClosingPriceController {
         Map<String,Object> params = new HashMap<>();
 
         LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minus(1, ChronoUnit.YEARS);
+        LocalDate startDate = endDate.minus(4, ChronoUnit.YEARS);
 
         String strStartDate = startDate.format(FormatterTypes.YYYYMMDD.ofPattern());
         String strEndDate = endDate.format(FormatterTypes.YYYYMMDD.ofPattern());
@@ -41,7 +41,9 @@ public class ClosingPriceController {
         params.put("endDate", strEndDate);
 
         List<Map<String,Object>> kospiResult = closingPriceService.getKospiResult(params);
+        List<Map<String,Object>> trendingResult = closingPriceService.getTrendingResult(params);
         model.addAttribute("kospiResult", new ObjectMapper().writeValueAsString(kospiResult));
+        model.addAttribute("trendingResult", new ObjectMapper().writeValueAsString(trendingResult));
         model.addAttribute("startDate", strStartDate);
         model.addAttribute("endDate", strEndDate);
 

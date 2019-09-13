@@ -16,4 +16,9 @@ public class ClosingPriceServiceImpl implements ClosingPriceService{
     public List<Map<String, Object>> getKospiResult(Map<String, Object> params) {
         return closingPriceDao.getKospiResult(params);
     }
+
+    @Override
+    public List<Map<String, Object>> getTrendingResult(Map<String, Object> params) {
+        return closingPriceDao.getTrendingResult(params);
+    }
 }

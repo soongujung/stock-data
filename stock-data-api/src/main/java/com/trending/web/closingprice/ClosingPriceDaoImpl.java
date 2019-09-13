@@ -17,4 +17,9 @@ public class ClosingPriceDaoImpl implements ClosingPriceDao {
     public List<Map<String, Object>> getKospiResult(Map<String, Object> params) {
         return sqlSession.selectList("trending.getKospiResult",params);
     }
+
+    @Override
+    public List<Map<String, Object>> getTrendingResult(Map<String, Object> params) {
+        return sqlSession.selectList("trending.getTrendingResult", params);
+    }
 }

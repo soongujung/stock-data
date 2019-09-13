@@ -20,4 +20,34 @@
         LEFT OUTER JOIN stock_kospi_day k
         ON TO_CHAR(y.unit::DATE, 'YYYYMMDD') = k."TIME"
     </select>
+
+    <select id="getTrendingResult" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        WITH SEARCH_DATE AS(
+            SELECT
+                #{startDate}::timestamp   as start_date,
+                #{endDate}::timestamp   as end_date
+        ),
+        SEARCH_SERIES AS(
+            SELECT generate_series(
+                (SELECT d1.start_date FROM SEARCH_DATE AS d1)::timestamp,
+                (SELECT d1.end_date FROM SEARCH_DATE AS d1)::timestamp,
+                interval '1 day'
+            )   AS UNIT
+        )
+        SELECT
+            TO_CHAR(s.UNIT, 'YYYY-MM-DD') as time,
+            k."DATA_VALUE"   as kospi,
+            e1."DATA_VALUE"  as exchange_rate_dollar,
+            e2."DATA_VALUE"  as corporate_loan_month,
+            e3."DATA_VALUE"  as household_loan_month
+        FROM SEARCH_SERIES s
+        LEFT OUTER JOIN stock_kospi_day k
+            ON TO_CHAR(s.unit, 'YYYYMMDD')= k."TIME"
+        LEFT OUTER JOIN economy_exchange_rate_dollar_day e1
+            ON TO_cHAR(s.unit, 'YYYYMMDD')= e1."TIME"
+        LEFT OUTER JOIN economy_corporate_loan_month e2
+            ON TO_CHAR(s.unit, 'YYYYMM') = e2."TIME"
+        LEFT OUTER JOIN economy_household_loan_month e3
+            ON TO_CHAR(s.unit, 'YYYYMM') = e3."TIME"
+    </select>
 </mapper>
