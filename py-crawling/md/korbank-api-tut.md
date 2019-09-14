@@ -42,8 +42,6 @@ java 를 주 언어로 하는 개발자이고, spring batch, quartz를 도입하
 
 ## 환경구성
 
-
-
 의존성 설치
 
 ```bash
@@ -65,11 +63,12 @@ $ virtualenv env_crawler
 
 
 ## DB연동 - sqlAlchemy, pandas
-
-추후정리
-
-코드
-
+dataframe을 이용해 select 해오는 것과 insert 하는 것에 대한 예제코드  
+  
+추후정리  
+  
+코드  
+  
 ```python
 #-*- coding:utf-8 -*-
 
