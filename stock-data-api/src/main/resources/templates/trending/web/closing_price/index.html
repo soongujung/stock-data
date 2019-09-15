@@ -49,18 +49,19 @@
 	    chart.data = generateChartData();
 
 	    // Create axes
-	    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        var dateAxis = new am4charts.DateAxis();
+	    chart.xAxes.push(dateAxis);
 	    dateAxis.renderer.minGridDistance = 50;
 
 	    var valueAxisWon = new am4charts.ValueAxis();
         chart.yAxes.push(valueAxisWon);
 
-	    valueAxisWon.title.dy = -10;
+	    valueAxisWon.title.dy = -50;
+	    valueAxisWon.title.paddingRight = 0;
+	    valueAxisWon.title.paddingBottom = 400;
 	    valueAxisWon.renderer.opposite = false;
 	    valueAxisWon.title.fontWeight = 600;
 	    valueAxisWon.title.fontSize = 14;
-	    // valueAxisWon.title.paddingRight = 0;
-	    // valueAxisWon.title.paddingBottom = 400;
 	    valueAxisWon.tooltip.disabled = true;
 	    valueAxisWon.title.text = "원";
 	    valueAxisWon.title.rotation = 0;
@@ -71,7 +72,9 @@
 	    var valueAxisWonExchange = new am4charts.ValueAxis();
 	    chart.yAxes.push(valueAxisWonExchange);
 
-	    valueAxisWonExchange.title.dy = -10;
+	    valueAxisWonExchange.title.dy = -50;
+	    valueAxisWonExchange.title.paddingRight = 0;
+	    valueAxisWonExchange.title.paddingBottom = 400;
 	    valueAxisWonExchange.renderer.opposite = false;
 	    valueAxisWonExchange.title.fontWeight = 600;
 	    valueAxisWonExchange.title.fontSize = 14;
@@ -85,9 +88,10 @@
 	    var valueAxisPercent = new am4charts.ValueAxis();
 	    chart.yAxes.push(valueAxisPercent);
 
-	    valueAxisPercent.title.dy = -10;
+	    valueAxisPercent.title.dy = -50;
+	    valueAxisPercent.title.paddingRight = 0;
+	    valueAxisPercent.title.paddingBottom = 400;
 	    valueAxisPercent.renderer.opposite = true;
-
 	    valueAxisPercent.title.fontWeight = 600;
 	    valueAxisPercent.title.fontSize = 14;
 	    valueAxisPercent.tooltip.disabled = true;
@@ -98,15 +102,32 @@
 	    valueAxisPercent.renderer.grid.template.disabled = true;
 
 	    // Create series
-	    var seriesLineKospi = createLineSeries(chart, valueAxisWon, "kospi", "date", "#339af0", "kospi : {valueY.value} (원)");
-	    var seriesLineExcangeRate = createLineSeries(chart, valueAxisWonExchange, "exchange_rate_dollar", "date", "#d9480f", "환율 : {valueY.value} (원)");
-	    var corporate_loan = createLineSeries(chart, valueAxisPercent, "corporate_loan_month", "date", "#51cf66", "대출 금리(기업) : {valueY.value} (%)");
-	    var household_loan_month = createLineSeries(chart, valueAxisPercent, "household_loan_month", "date", "#868e96", "대출 금리(가계) : {valueY.value} (%)");
+	    var seriesLineKospi = createLineSeries(chart, valueAxisWon, "kospi", "date", "#339af0", "kospi : {valueY.value} (원)", "KOSPI 지수");
+	    var seriesLineExcangeRate = createLineSeries(chart, valueAxisWonExchange, "exchange_rate_dollar", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
+	    var corporate_loan = createLineSeries(chart, valueAxisPercent, "corporate_loan_month", "date", "#51cf66", "대출 금리(기업) : {valueY.value} (%)", "대출 금리(기업)");
+	    var household_loan_month = createLineSeries(chart, valueAxisPercent, "household_loan_month", "date", "#868e96", "대출 금리(가계) : {valueY.value} (%)", "대출 금리(가계)");
 
 	    // Add cursor
 	    chart.cursor = new am4charts.XYCursor();
 	    chart.cursor.xAxis = dateAxis;
 	    // chart.cursor.snapToSeries = seriesLineKospi;
+        chart.legend = new am4charts.Legend();
+        chart.legend.useDefaultMarker = true;
+
+        // var marker = chart.legend.markers.template.children.getIndex(0);
+        // marker.cornerRadius(12,12,12,12);
+	    // marker.strokeWidth = 0;
+	    // marker.strokeOpacity = 1;
+	    // marker.zIndex = 2;
+	    // // marker.width = 15;
+	    // // marker.height = 15;
+	    // chart.legend.paddingTop = 17;
+	    // marker.stroke = am4core.color("#ccc");
+	    // chart.legend.position = "bottom";
+	    // chart.legend.align = "center";
+	    // chart.legend.marginTop = -20;
+	    // chart.legend.contentAlign = "center";
+	    // chart.preloader.disabled = true;
 
 	    function generateChartData() {
 	    	var chartData = [];
@@ -127,7 +148,7 @@
 	    }
     }
 
-    function createLineSeries(chart, valueAxis, valueColumn, dateColumn, color, tooltipText){
+    function createLineSeries(chart, valueAxis, valueColumn, dateColumn, color, tooltipText, legendName){
 	    var seriesLine = new am4charts.LineSeries();
 	    chart.series.push(seriesLine);
 
@@ -146,6 +167,7 @@
 	    seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
 	    seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
 	    seriesLine.tooltip.label.padding(12,12,12,12);
+	    seriesLine.name = legendName;
 
 	    seriesLine.yAxis = valueAxis;
 	    // Add scrollbar
