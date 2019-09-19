@@ -31,8 +31,16 @@ public class ClosingPriceController {
 //        return "/trending/web/closing_price/index";
         Map<String,Object> params = new HashMap<>();
 
+//        LocalDate endDate = LocalDate.now();
+//        LocalDate startDate = endDate.minus(5, ChronoUnit.YEARS);
+//        LocalDate startDate = LocalDate.of(2014,1,1);
+
         LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minus(4, ChronoUnit.YEARS);
+        LocalDate startDate = LocalDate.parse(
+                                    endDate.minus(5, ChronoUnit.YEARS)
+                                            .format(FormatterTypes.YYYYMM01.ofPattern()),
+                                    FormatterTypes.YYYYMMDD.ofPattern());
+
 
         String strStartDate = startDate.format(FormatterTypes.YYYYMMDD.ofPattern());
         String strEndDate = endDate.format(FormatterTypes.YYYYMMDD.ofPattern());

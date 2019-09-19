@@ -3,6 +3,17 @@ package com.types.date.localdate;
 import java.time.format.DateTimeFormatter;
 
 public enum FormatterTypes {
+    YYYYMM01(0, "yyyyMM01"){
+        @Override
+        public DateTimeFormatter processDashFormat() {
+            return DateTimeFormatter.ofPattern("yyyy-MM-01");
+        }
+
+        @Override
+        public DateTimeFormatter processSlashFormat() {
+            return DateTimeFormatter.ofPattern("yyyy/MM/01");
+        }
+    },
 
     YYYYMMDD(1, "yyyyMMdd"){
         @Override
