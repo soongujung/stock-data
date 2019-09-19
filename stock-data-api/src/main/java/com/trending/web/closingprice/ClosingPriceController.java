@@ -38,11 +38,12 @@ public class ClosingPriceController {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = LocalDate.parse(
                                     endDate.minus(5, ChronoUnit.YEARS)
-                                            .format(FormatterTypes.YYYYMM01.ofPattern()),
+                                            .format(FormatterTypes.YYYY0101.ofPattern()),
                                     FormatterTypes.YYYYMMDD.ofPattern());
 
-
         String strStartDate = startDate.format(FormatterTypes.YYYYMMDD.ofPattern());
+        // OR
+//        String strStartDate2 = startDate.format(FormatterTypes.YYYY0101.ofPattern());
         String strEndDate = endDate.format(FormatterTypes.YYYYMMDD.ofPattern());
 
         params.put("startDate", strStartDate);
