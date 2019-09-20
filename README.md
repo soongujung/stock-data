@@ -22,8 +22,12 @@
 
 
 
-Season 1
+**Season 1**
 
+- 
+- API) TDD + api 화 하기
+- 인증) JWT 인증 구현 (Slack)
+    
 - AWS 배포
 - Zenkins + AWS 배포 자동화
 - 이슈관리 시스템 도입 필요
@@ -32,11 +36,19 @@ Season 1
 
 
 
-Season 2
+**Season 2**
 
+- React 도입!! 후하하하. web(Express.js)과 api(Spring Boot) 분리
+- TDD기반 개발 진행
 - 상관분석 (각각의 지표가 다른 지표와 1인지 -1인지)
 - Docker - 크롤링코드, python,java,spring 개발/배포 환경 
-- Kubernetes - DB를 로컬에서도 운영할 수 있도록 DB Setup 
+
+
+
+**Season3**
+
+- api 서버 다중화 (기획점에 따라 크게 분류를 나누아 각각에 대한 api 서버로 분리)
+- 다중화된 api 서버에 대한 인증 서버 구현
 
 
 
