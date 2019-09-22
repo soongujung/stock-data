@@ -45,9 +45,7 @@ public class ClosingPriceController {
         params.put("startDate", strStartDate);
         params.put("endDate", strEndDate);
 
-        List<Map<String,Object>> kospiResult = closingPriceService.getKospiResult(params);
         List<Map<String,Object>> trendingResult = closingPriceService.getTrendingResult(params);
-        model.addAttribute("kospiResult", new ObjectMapper().writeValueAsString(kospiResult));
         model.addAttribute("trendingResult", new ObjectMapper().writeValueAsString(trendingResult));
         model.addAttribute("startDate", strStartDate);
         model.addAttribute("endDate", strEndDate);

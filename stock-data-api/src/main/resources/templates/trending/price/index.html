@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>trending kospi and others</title>
-    <script src="/static/assets/js/charts/zingchart.min.js"></script>
+    <script src="/static/assets/js/axios/axios.min.js"></script>
     <script src="/static/assets/js/charts/amcharts_4.5.16/amcharts4/core.js"></script>
     <script src="/static/assets/js/charts/amcharts_4.5.16/amcharts4/charts.js"></script>
     <script src="/static/assets/js/charts/amcharts_4.5.16/amcharts4/themes/material.js"></script>
@@ -28,13 +28,29 @@
 </body>
 <script th:inline="javascript">
 	/*<![CDATA[*/
+	var kospiResult = JSON.parse(/*[[${kospiResult}]]*/ null);
 	var trendingResult = JSON.parse(/*[[${trendingResult}]]*/ null);
 	var startDate = /*[[${startDate}]]*/ null;
 	var endDate = /*[[${endDate}]]*/ null;
 	/*]]>*/
     console.log(trendingResult);
 
-    renderChart(trendingResult);
+    document.onload = function(){
+        axios.get('/api/trending/default', {
+            params:{
+                startDate : null,
+                endDate : null
+            }
+        }).then(function(res){
+            console.log('response >>> ', res);
+        }).catch(function(error){
+
+        }).finally(function(){
+
+        });
+
+        renderChart(trendingResult);
+    };
 
     function renderChart(sqlResult){
 	    // Themes begin
