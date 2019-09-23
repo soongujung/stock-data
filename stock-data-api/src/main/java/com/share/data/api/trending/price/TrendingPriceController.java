@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,17 @@ public class TrendingPriceController {
 
     @GetMapping(value = "/api/trending/default")
     public @ResponseBody Object getDefaultData(@RequestParam String startDate, @RequestParam String endDate){
-        return null;
+        Map<String, Object> params = new HashMap<>();
+        LocalDate endLDate = LocalDate.now();
+        LocalDate startLDate = endLDate.minus(5, ChronoUnit.YEARS);
+
+        params.put("startDate", startLDate.format(FormatterTypes.YYYY0101.ofPattern()));
+        params.put("endDate", endLDate.format(FormatterTypes.YYYYMMDD.ofPattern()));
+
+        List<Map<String, Object>> trendingResult = closingPriceService.getTrendingResult(params);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("data", trendingResult);
+        return resultMap;
     }
 }
