@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 "/auth/slack/redirect/**", "/auth/slack/proxy/**",
                                 "/api/test/**",
                                 "/api/trending/**", // 개발 용도의 trending API 인증 임시 해제
-                                "/trending/web/**",
+                                "/trending/**",
                                 "/static/**")
                 .permitAll() // '/'와 /hello 에 해당하는 페이지는 모든 사용자가 볼 수 있도록 허용
                 .anyRequest().authenticated()       // 그 외의 모든 요청은 authentication이 필요하다.
