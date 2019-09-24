@@ -53,7 +53,8 @@ public class TrendingPriceController {
     }
 
     @GetMapping(value = "/api/trending/default")
-    public @ResponseBody Object getDefaultData(@RequestParam String startDate, @RequestParam String endDate){
+    public @ResponseBody Object getDefaultData(@RequestParam(value = "startDate", required = false) String startDate,
+                                               @RequestParam(value = "endDate", required = false) String endDate){
         Map<String, Object> params = new HashMap<>();
         LocalDate endLDate = LocalDate.now();
         LocalDate startLDate = endLDate.minus(5, ChronoUnit.YEARS);
