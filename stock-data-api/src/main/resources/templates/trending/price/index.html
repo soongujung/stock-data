@@ -27,15 +27,9 @@
 
 </body>
 <script th:inline="javascript">
-	/*<![CDATA[*/
-	var kospiResult = JSON.parse(/*[[${kospiResult}]]*/ null);
-	var trendingResult = JSON.parse(/*[[${trendingResult}]]*/ null);
-	var startDate = /*[[${startDate}]]*/ null;
-	var endDate = /*[[${endDate}]]*/ null;
-	/*]]>*/
-    console.log(trendingResult);
 
-    document.onload = function(){
+    window.onload = function(){
+        console.log('onload');
         axios.get('/api/trending/default', {
             params:{
                 startDate : null,
@@ -43,13 +37,15 @@
             }
         }).then(function(res){
             console.log('response >>> ', res);
+            var sqlChartResult = response.data.chart;
+            renderChart(sqlChartResult);
         }).catch(function(error){
 
         }).finally(function(){
 
         });
 
-        renderChart(trendingResult);
+        // renderChart(trendingResult);
     };
 
     function renderChart(sqlResult){
@@ -117,10 +113,10 @@
 	    valueAxisPercent.renderer.grid.template.disabled = true;
 
 	    // Create series
-	    var seriesLineKospi = createLineSeries(chart, valueAxisWon, "kospi", "date", "#339af0", "kospi : {valueY.value} (원)", "KOSPI 지수");
-	    var seriesLineExcangeRate = createLineSeries(chart, valueAxisWonExchange, "exchange_rate_dollar", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
-	    var corporate_loan = createLineSeries(chart, valueAxisPercent, "corporate_loan_month", "date", "#51cf66", "대출 금리(기업) : {valueY.value} (%)", "대출 금리(기업)");
-	    var household_loan_month = createLineSeries(chart, valueAxisPercent, "household_loan_month", "date", "#868e96", "대출 금리(가계) : {valueY.value} (%)", "대출 금리(가계)");
+	    var seriesLineKospi         = createLineSeries(chart, valueAxisWon,         "kospi",                "date", "#339af0", "kospi : {valueY.value} (원)",        "KOSPI 지수");
+	    var seriesLineExcangeRate   = createLineSeries(chart, valueAxisWonExchange, "exchange_rate_dollar", "date", "#d9480f", "환율 : {valueY.value} (원)",          "환율 (달러)");
+	    var corporate_loan          = createLineSeries(chart, valueAxisPercent,     "corporate_loan_month", "date", "#51cf66", "대출 금리(기업) : {valueY.value} (%)", "대출 금리(기업)");
+	    var household_loan_month    = createLineSeries(chart, valueAxisPercent,     "household_loan_month", "date", "#868e96", "대출 금리(가계) : {valueY.value} (%)", "대출 금리(가계)");
 
 	    // Add cursor
 	    chart.cursor = new am4charts.XYCursor();

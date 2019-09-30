@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -38,17 +37,12 @@ public class TrendingPriceController {
                 FormatterTypes.YYYYMMDD.ofPattern());
 
         String strStartDate = startDate.format(FormatterTypes.YYYYMMDD.ofPattern());
-        // OR
-//        String strStartDate2 = startDate.format(FormatterTypes.YYYY0101.ofPattern());
         String strEndDate = endDate.format(FormatterTypes.YYYYMMDD.ofPattern());
 
         params.put("startDate", strStartDate);
         params.put("endDate", strEndDate);
 
         List<Map<String,Object>> trendingResult = closingPriceService.getTrendingResult(params);
-        model.addAttribute("trendingResult", new ObjectMapper().writeValueAsString(trendingResult));
-        model.addAttribute("startDate", strStartDate);
-        model.addAttribute("endDate", strEndDate);
         return "/trending/price/index";
     }
 
@@ -65,7 +59,7 @@ public class TrendingPriceController {
         List<Map<String, Object>> trendingResult = closingPriceService.getTrendingResult(params);
 
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("data", trendingResult);
+        resultMap.put("chart", trendingResult);
         return resultMap;
     }
 }
