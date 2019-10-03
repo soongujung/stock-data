@@ -1,4 +1,4 @@
-package com.trending.web.closingprice;
+package com.share.data.api.trending.price;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ClosingPriceDaoImpl implements ClosingPriceDao {
+public class TrendingPriceDaoImpl implements TrendingPriceDao {
 
     @Autowired
     private SqlSession sqlSession;
