@@ -61,19 +61,9 @@ public class TrendingPriceController {
             trendingResult = getDefaultTrendingPrice();
         }
 
-        TrendingPriceEntity max = trendingResult.parallelStream()
-                .map(MapProcessor::processMapToEntity)
-                .collect(maxBy(comparingDouble(TrendingPriceEntity::getdKospi)))
-                .get();
-
-        TrendingPriceEntity min = trendingResult.parallelStream()
-                .map(MapProcessor::processMapToEntity)
-                .collect(minBy(comparingDouble(TrendingPriceEntity::getdKospi)))
-                .get();
-
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("max", max);
-        resultMap.put("min", min);
+        resultMap.put("max", trendingPriceService.getMaxKospi(trendingResult));
+        resultMap.put("min", trendingPriceService.getMinKospi(trendingResult));
         return resultMap;
     }
 
