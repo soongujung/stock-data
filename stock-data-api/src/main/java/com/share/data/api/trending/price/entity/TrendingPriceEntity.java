@@ -2,10 +2,10 @@ package com.share.data.api.trending.price.entity;
 
 public class TrendingPriceEntity {
     private String      sTime;
-    private double      dKospi;
-    private double      dExchangeRateDollar;
-    private double      dCorporateLoan;
-    private double      dHouseholdLoan;
+    private Double      dKospi;
+    private Double      dExchangeRateDollar;
+    private Double      dCorporateLoan;
+    private Double      dHouseholdLoan;
 
     public String getsTime() {
         return sTime;
@@ -15,35 +15,35 @@ public class TrendingPriceEntity {
         this.sTime = sTime;
     }
 
-    public double getdKospi() {
+    public Double getdKospi() {
         return dKospi;
     }
 
-    public void setdKospi(double dKospi) {
+    public void setdKospi(Double dKospi) {
         this.dKospi = dKospi;
     }
 
-    public double getdExchangeRateDollar() {
+    public Double getdExchangeRateDollar() {
         return dExchangeRateDollar;
     }
 
-    public void setdExchangeRateDollar(double dExchangeRateDollar) {
+    public void setdExchangeRateDollar(Double dExchangeRateDollar) {
         this.dExchangeRateDollar = dExchangeRateDollar;
     }
 
-    public double getdCorporateLoan() {
+    public Double getdCorporateLoan() {
         return dCorporateLoan;
     }
 
-    public void setdCorporateLoan(double dCorporateLoan) {
+    public void setdCorporateLoan(Double dCorporateLoan) {
         this.dCorporateLoan = dCorporateLoan;
     }
 
-    public double getdHouseholdLoan() {
+    public Double getdHouseholdLoan() {
         return dHouseholdLoan;
     }
 
-    public void setdHouseholdLoan(double dHouseholdLoan) {
+    public void setdHouseholdLoan(Double dHouseholdLoan) {
         this.dHouseholdLoan = dHouseholdLoan;
     }
 }
