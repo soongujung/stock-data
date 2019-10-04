@@ -12,16 +12,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Comparator.comparingDouble;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.maxBy;
+import static java.util.stream.Collectors.minBy;
 
 @Controller
+@SessionAttributes("trendingPrice")
 public class TrendingPriceController {
     final static Logger LOGGER = LoggerFactory.getLogger(TrendingPriceController.class);
 
@@ -30,36 +34,17 @@ public class TrendingPriceController {
 
     @GetMapping(value = "/trending/price/index")
     public String getPage(Model model) throws JsonProcessingException {
-        Map<String,Object> params = new HashMap<>();
-
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = LocalDate.parse(
-                endDate.minus(5, ChronoUnit.YEARS)
-                        .format(FormatterTypes.YYYY0101.ofPattern()),
-                FormatterTypes.YYYYMMDD.ofPattern());
-
-        String strStartDate = startDate.format(FormatterTypes.YYYYMMDD.ofPattern());
-        String strEndDate = endDate.format(FormatterTypes.YYYYMMDD.ofPattern());
-
-        params.put("startDate", strStartDate);
-        params.put("endDate", strEndDate);
-
-//        List<Map<String,Object>> trendingResult = closingPriceService.getTrendingResult(params);
         return "/trending/price/index";
     }
 
     @GetMapping(value = "/api/trending/default")
     public @ResponseBody Object getDefaultData(@RequestParam(value = "startDate", required = false) String startDate,
-                                               @RequestParam(value = "endDate", required = false) String endDate){
-        Map<String, Object> params = new HashMap<>();
-        LocalDate endLDate = LocalDate.now();
-        LocalDate startLDate = endLDate.minus(5, ChronoUnit.YEARS);
+                                               @RequestParam(value = "endDate", required = false) String endDate,
+                                               Model model){
 
-        params.put("startDate", startLDate.format(FormatterTypes.YYYY0101.ofPattern()));
-        params.put("endDate", endLDate.format(FormatterTypes.YYYYMMDD.ofPattern()));
+        List<Map<String, Object>> trendingResult = getDefaultTrendingPrice();
+        model.addAttribute("trendingResult", trendingResult);
 
-        List<Map<String, Object>> trendingResult = trendingPriceService.getTrendingResult(params);
-        
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("chart", trendingResult);
         return resultMap;
@@ -67,15 +52,15 @@ public class TrendingPriceController {
 
     @GetMapping(value = "/api/trending/kospi/minmax")
     public @ResponseBody Object getMinMaxKospi( @RequestParam(value = "startDate", required = false) String startDate,
-                                                @RequestParam(value = "endDate", required = false) String endDate){
-        Map<String, Object> params = new HashMap<>();
-        LocalDate endLDate = LocalDate.now();
-        LocalDate startLDate = endLDate.minus(5, ChronoUnit.YEARS);
+                                                @RequestParam(value = "endDate", required = false) String endDate,
+                                                Model model){
 
-        params.put("startDate", startLDate.format(FormatterTypes.YYYY0101.ofPattern()));
-        params.put("endDate", endLDate.format(FormatterTypes.YYYYMMDD.ofPattern()));
+        List<Map<String, Object>> trendingResult = (List<Map<String, Object>>) model.asMap().get("trendingPrice");
 
-        List<Map<String, Object>> trendingResult = trendingPriceService.getTrendingResult(params);
+        if(trendingResult == null){
+            trendingResult = getDefaultTrendingPrice();
+        }
+
         TrendingPriceEntity max = trendingResult.parallelStream()
                 .map(MapProcessor::processMapToEntity)
                 .collect(maxBy(comparingDouble(TrendingPriceEntity::getdKospi)))
@@ -90,5 +75,17 @@ public class TrendingPriceController {
         resultMap.put("max", max);
         resultMap.put("min", min);
         return resultMap;
+    }
+
+    private List<Map<String, Object>> getDefaultTrendingPrice(){
+        Map<String, Object> params = new HashMap<>();
+        LocalDate endLDate = LocalDate.now();
+        LocalDate startLDate = endLDate.minus(5, ChronoUnit.YEARS);
+
+        params.put("startDate", startLDate.format(FormatterTypes.YYYY0101.ofPattern()));
+        params.put("endDate", endLDate.format(FormatterTypes.YYYYMMDD.ofPattern()));
+
+        List<Map<String, Object>> trendingResult = trendingPriceService.getTrendingResult(params);
+        return trendingResult;
     }
 }
