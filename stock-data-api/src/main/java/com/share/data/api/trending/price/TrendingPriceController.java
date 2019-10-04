@@ -1,9 +1,8 @@
 package com.share.data.api.trending.price;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.share.data.api.trending.price.convertor.MapProcessor;
-import com.share.data.api.trending.price.entity.TrendingPriceEntity;
 import com.types.date.localdate.FormatterTypes;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Comparator.comparingDouble;
-import static java.util.stream.Collectors.maxBy;
-import static java.util.stream.Collectors.minBy;
-
 @Controller
 @SessionAttributes("trendingPrice")
 public class TrendingPriceController {
@@ -38,20 +33,20 @@ public class TrendingPriceController {
     }
 
     @GetMapping(value = "/api/trending/default")
-    public @ResponseBody Object getDefaultData(@RequestParam(value = "startDate", required = false) String startDate,
+    public @ResponseBody JSONObject getDefaultData(@RequestParam(value = "startDate", required = false) String startDate,
                                                @RequestParam(value = "endDate", required = false) String endDate,
                                                Model model){
 
         List<Map<String, Object>> trendingResult = getDefaultTrendingPrice();
         model.addAttribute("trendingResult", trendingResult);
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("chart", trendingResult);
-        return resultMap;
+        JSONObject jsonResult = new JSONObject();
+        jsonResult.put("chart", trendingResult);
+        return jsonResult;
     }
 
     @GetMapping(value = "/api/trending/kospi/minmax")
-    public @ResponseBody Object getMinMaxKospi( @RequestParam(value = "startDate", required = false) String startDate,
+    public @ResponseBody JSONObject getMinMaxKospi( @RequestParam(value = "startDate", required = false) String startDate,
                                                 @RequestParam(value = "endDate", required = false) String endDate,
                                                 Model model){
 
@@ -61,10 +56,10 @@ public class TrendingPriceController {
             trendingResult = getDefaultTrendingPrice();
         }
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("max", trendingPriceService.getMaxKospi(trendingResult));
-        resultMap.put("min", trendingPriceService.getMinKospi(trendingResult));
-        return resultMap;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("max", trendingPriceService.getMaxKospi(trendingResult));
+        jsonObject.put("min", trendingPriceService.getMinKospi(trendingResult));
+        return jsonObject;
     }
 
     private List<Map<String, Object>> getDefaultTrendingPrice(){

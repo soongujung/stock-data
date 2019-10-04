@@ -24,29 +24,57 @@
 </head>
 <body>
 <div id="myChart" class="chart--container"></div>
+<div id="minmax-kospi">
+    <span> 코스피 최저점 : <p id="min-kospi">-</p> </span>
+    <span> 코스피 최대점 : <p id="max-kospi">-</p> </span>
+</div>
 
 </body>
 <script th:inline="javascript">
+    var URL_DEFAULT_CHART='/api/trending/default';
+    var URL_DEFAULT_MINMAX='/api/trending/kospi/minmax';
+    var COLNAME_KOSPI = 'dKospi';
 
     window.onload = function(){
-        console.log('onload');
-        axios.get('/api/trending/default', {
+        getDefaultChart();
+        getKospiMinMax();
+        // renderChart(trendingResult);
+    };
+
+    function getDefaultChart(){
+        axios.get(URL_DEFAULT_CHART, {
             params:{
                 startDate : null,
                 endDate : null
             }
         }).then(function(res){
-            console.log('response >>> ', res);
-            var sqlChartResult = response.data.chart;
+            var sqlChartResult = res.data.chart;
             renderChart(sqlChartResult);
         }).catch(function(error){
 
         }).finally(function(){
 
         });
+    }
 
-        // renderChart(trendingResult);
-    };
+    function getKospiMinMax(){
+        axios.get(URL_DEFAULT_MINMAX,{
+            params:{
+                startDate: null,
+                endDate: null
+            }
+        }).then(function(res){
+            console.log('response', res);
+            var min = res.data.min[COLNAME_KOSPI];
+            var max = res.data.max[COLNAME_KOSPI];
+
+            var min_kospi = document.querySelector('#min-kospi');
+            var max_kospi = document.querySelector('#max-kospi');
+
+            min_kospi.innerHTML = min;
+            max_kospi.innerHTML = max;
+        })
+    }
 
     function renderChart(sqlResult){
 	    // Themes begin
