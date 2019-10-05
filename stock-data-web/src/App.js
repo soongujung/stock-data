@@ -15,8 +15,8 @@ class App extends Component {
                 <div className="sidebar">
                     <ul>
                         <li><Link to="/"> About </Link></li>
-                        <li><Link to="/indexes"> 경제지표 </Link></li>
-                        <li><Link to="/analysis"> 데이터 분석 </Link></li>
+                        <li><Link to="/indexes"> trending indexes </Link></li>
+                        <li><Link to="/analysis"> data analysis </Link></li>
                     </ul>
                 </div>
                 <div className="page-area">
