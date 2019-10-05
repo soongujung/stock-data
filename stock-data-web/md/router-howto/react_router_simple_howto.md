@@ -38,17 +38,14 @@ index.js 파일은
 - ReactDOM.render() 함수에 ReactDOM.render( arg1, arg2 )의 형식으로 인자로 전달한다.
 
 
-
-**ReactDOM.render( arg1, arg2 )**의 인자는
-
+**ReactDOM.render( arg1, arg2 )** 의 인자는  
 - **arg1**  
   보통 컴포넌트가 들어가는 듯하다. react-router-dom을 사용하지 않는다면 \<App/\> 이 인자로 넘기는 편이다.  
 - **arg2**  
   보통 HTML의 요소를 선택해 넘기는 편 인듯 하다.  
 
 
-
-```react
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -73,42 +70,34 @@ serviceWorker.unregister();
 
 - \<BrowserRouter\> 컴포넌트로 \<App\> 컴포넌트를 감싸서 첫번째 요소로 넘겨주었다.   
 - Router를 적용하기 위해서는 \<BrowserRouter\>로 \<App\> 컴포넌트를 감싸주어야 한다.  
-
-
-
+  
 라우터를 사용하기 위해서는 최상단의 \<App\> 컴포넌트를 \<BrowserRouter\> 컴포넌트 내에 감싸서 전달해주어야 한다.  
-
-
+  
 - **ReactDOM.render()**  
   ![api](./img/ReactDOM_render_function.png)  
   더 자세한 내용은  [공식문서](https://reactjs.org/docs/react-dom.html#render)를 참고하자.   
 
-- **BrowserRouter**
-  react의 라우터는 BrowserRouter외에도 HashRouter도 있다. 여기서는 그중에서 BrowserRouter를 사용했다.
+- **BrowserRouter**  
+  react의 라우터는 BrowserRouter외에도 HashRouter도 있다. 여기서는 그중에서 BrowserRouter를 사용했다.  
   자세한 내용은 [공식문서](https://reacttraining.com/react-router/web/guides/primary-components) 를 참고하자.  
 
 
 
 ## 2. Sidebar - css 컴포넌트 작업 (선택)
 
-sidebar 를 만들어서 
-
+sidebar 를 만들어서   
+  
 - sidebar는  
   좌측에 고정  
 - page-area(sidebar 우측)에는  
   원하는 컨텐츠의 바디를 위치  
 
 로직을 작성할 예정.  
-
-
-
+  
 react의 신기한 점은 css도 컴포넌트로 인식된다는 점이다. 여기서는 왼쪽 화면에 메뉴를 가지고 있는 사이드바를 만들 것이다. (css 없이도 원하는 예제를 만들어 확인할 수 있다. )  
-
-
-
+  
 **sidebar.css**  
-
-(직접 만들었는데 디자인이 참 구리다. 나중에 색감&디자인을 고려해서 이쁘게 고쳐야 한다.)
+(직접 만들었는데 디자인이 참 구리다. 나중에 색감&디자인을 고려해서 이쁘게 고쳐야 한다.)  
 
 ```css
 /* 왼쪽 사이드바 */
@@ -163,16 +152,11 @@ react의 신기한 점은 css도 컴포넌트로 인식된다는 점이다. 여�
     color: white;
 }
 ```
-
-
-
+  
 ## 3. App.js - 컴포넌트 라우팅 
-
 App.js 파일을 열어서 href 와 같은 태그에 각 컴포넌트로 이동할수 있도록 해주는 작업을 할 것이다.  
 
-
-
-```react
+```jsx
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -209,11 +193,8 @@ export default App;
 
 위 소스에 About, Indexes, Analysis 가 있다. About, Indexes, Analysis는 밑에서 작성하는 컴포넌트 들이다.  
 
-
-
 주목해서 봐야 할 부분은 아래의 부분이다.  
-
-```react
+```jsx
                 <div className="sidebar">
                     <ul>
                         <li><Link to="/"> About </Link></li>
@@ -227,33 +208,25 @@ export default App;
                     <Route path="/analysis" component={Analysis}></Route>
                 </div>
 ```
-
-
-
+  
 - \<Link to="/blablah"\>\</Link\>  
   어느 URL로 이동할 지를 가리키는(link) 역할을 한다.  
 
 - \<Route path="/blablah" component={BlaBlah}\>\<Route\>  
   URL "/blablah"에 대한 라우팅이다. "/blablah" 링크를 클릭하면 \<Route\> 태그가 위치한 곳의 영역이 BlaBlah컴포넌트의 UI로 대치되게 된다.  
-
   
-
 exact 프로퍼티는 url이 오직 /blablah일때에만 매칭하겠다는 의미.  
 
-exact를 지정하지 않으면 
-
+exact를 지정하지 않으면  
 - /blablah/:name 과 같은식의 url이 있을경우  
   이 때에도 /blablah에 대한 URL로 라우팅하게 된다.  
-
-
-
+  
 ## 4. About, Indexes, Analysis 컴포넌트 구현
-
 라우터가 탐색할 컴포넌트를 구현한다.  
 
 #### about.js
 
-```react
+```jsx
 import React, {Component} from 'react';
 
 class About extends Component {
@@ -273,7 +246,7 @@ export default About;
 
 #### analysis.js
 
-```react
+```jsx
 import React, {Component} from 'react';
 
 class Analysis extends Component {
@@ -293,7 +266,7 @@ export default Analysis;
 
 #### indexes.js
 
-```react
+```jsx
 import React, {Component} from 'react';
 
 class Indexes extends Component {
