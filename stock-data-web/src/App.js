@@ -16,7 +16,7 @@ class App extends Component {
                     <ul>
                         <li><Link to="/"> About </Link></li>
                         <li><Link to="/indexes"> 경제지표 </Link></li>
-                        <li><Link to="/analysis"> 분석 </Link></li>
+                        <li><Link to="/analysis"> 데이터 분석 </Link></li>
                     </ul>
                 </div>
                 <div className="page-area">

@@ -13,7 +13,7 @@
 
     /* 왼쪽 전부 차지하도록 */
     position: fixed;
-    overflow: auto;
+    overflow: hidden;
     height: 100%;
 }
 .page-area {
