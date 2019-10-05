@@ -55,13 +55,19 @@
 ## ScreenShots
 
 2019-09-17 (현재)
-
+### stock-data-api
 ![asdf](./img/README/screenshot_1.png)
 
 - 금/은 (영국 거래소), 코스닥 지표 필요
 - 주요지표에(코스피, 금) 따르는 부수지표들(코스닥, 은) 분류
 
+### stock-data-web
+**react 프로젝트**  
+![sdf](./img/README/stock-data-web/screenshot1.png)
 
-
+#### TODO 
+- Express.js 기반 SSR 적용 
+- Sequelize or TypeORM 연동
+- stock-data-api REST API 연동
 
 
