@@ -1,0 +1,51 @@
+/* 왼쪽 사이드바 */
+.all{
+    display: inline;
+}
+.sidebar {
+    /* div 가로 정렬 */
+    display:inline;
+    float:left;
+    width:300px;
+
+    /* background-color 지정 */
+    background-color: #343a40;
+
+    /* 왼쪽 전부 차지하도록 */
+    position: fixed;
+    overflow: auto;
+    height: 100%;
+}
+.page-area {
+    /* 오른쪽 컨텐츠 영역 */
+    /* http://alik.info/p/7 */
+    /* div 가로 정렬 */
+    display:inline;
+    position: absolute;
+    width:auto;
+    margin-left:300px;
+    height:100%;
+    float: right;
+}
+.sidebar > ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.sidebar > ul > li a {
+    display: block;
+    width: 300px;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-weight: 900;
+    color: #dbe4ff;
+}
+.sidebar > ul> li a:hover{
+    background-color: #555;
+    color: white;
+}
+.sidebar > ul > li .active{
+    background-color: #4CAF50;
+    color: white;
+}
