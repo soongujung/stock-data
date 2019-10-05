@@ -62,7 +62,7 @@
 - 주요지표에(코스피, 금) 따르는 부수지표들(코스닥, 은) 분류
 
 ### stock-data-web
-2019-10-05
+2019-10-05  
 **react 프로젝트**  
 ![sdf](./img/README/stock-data-web/screenshot1.png)
 
