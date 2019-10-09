@@ -55,7 +55,6 @@ def df_to_sql(rest_data, table_name):
 
 # 1) kospi
 def kospi_day_insert():
-
     url_manager = UrlManager()
     url_manager \
         .add_api_key(api_key) \
@@ -74,9 +73,8 @@ def kospi_day_insert():
 
 # 2) 기업대출
 def corporate_insert():
-
-    url_manager2 = UrlManager()
-    url_manager2 \
+    url_manager = UrlManager()
+    url_manager \
         .add_api_key(api_key) \
         .add_from(1) \
         .add_to(5000) \
@@ -86,15 +84,15 @@ def corporate_insert():
         .add_end_date('20191231') \
         .add_item_code2('BECBLA02')
 
-    arr_data = get_korbank_result(url_manager2.build_url())
+    arr_data = get_korbank_result(url_manager.build_url())
 
     df_to_sql(arr_data, 'economy_corporate_loan_month')
 
 
 # 3) 가계 대출
 def household_loan_month():
-    url_manager2 = UrlManager()
-    url_manager2 \
+    url_manager = UrlManager()
+    url_manager \
         .add_api_key(api_key) \
         .add_from(1) \
         .add_to(5000) \
@@ -104,15 +102,15 @@ def household_loan_month():
         .add_end_date('20191231') \
         .add_item_code2('BECBLA03')
 
-    arr_data = get_korbank_result(url_manager2.build_url())
+    arr_data = get_korbank_result(url_manager.build_url())
 
     df_to_sql(arr_data, 'economy_household_loan_month')
 
 
 # 4) 환율
 def exchange_rate_dollar_day():
-    url_manager2 = UrlManager()
-    url_manager2 \
+    url_manager = UrlManager()
+    url_manager \
         .add_api_key(api_key) \
         .add_from(1) \
         .add_to(5000) \
@@ -122,7 +120,7 @@ def exchange_rate_dollar_day():
         .add_end_date('20191231') \
         .add_item_code2('0000001')
 
-    arr_data = get_korbank_result(url_manager2.build_url())
+    arr_data = get_korbank_result(url_manager.build_url())
 
     df_to_sql(arr_data, 'economy_exchange_rate_dollar_day')
 
