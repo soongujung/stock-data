@@ -91,6 +91,7 @@ def corporate_insert():
     df_to_sql(arr_data, 'economy_corporate_loan_month')
 
 
+# 3) 가계 대출
 def household_loan_month():
     url_manager2 = UrlManager()
     url_manager2 \
@@ -108,6 +109,7 @@ def household_loan_month():
     df_to_sql(arr_data, 'economy_household_loan_month')
 
 
+# 4) 환율
 def exchange_rate_dollar_day():
     url_manager2 = UrlManager()
     url_manager2 \
