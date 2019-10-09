@@ -22,6 +22,47 @@ dict_columns_type = get_column_types()
 # API KEY
 api_key = KEY_MAPPINGS['korbank']
 
+# TODO: 패키지로 정리할 것.
+kospi_kwargs = {
+    'from': 1,
+    'to': 5000,
+    'search_type': 'DD',
+    'start_date': '201400101',
+    'end_date': '20191231',
+    'item_code1': '064Y001',
+    'item_code2': '0001000'
+}
+
+corporate_loan_kwargs = {
+    'from': 1,
+    'to': 5000,
+    'search_type': 'MM',
+    'start_date': '201400101',
+    'end_date': '20191231',
+    'item_code1': '005Y003',
+    'item_code2': 'BECBLA02'
+}
+
+household_loan_kwargs = {
+    'from': 1,
+    'to': 5000,
+    'search_type': 'MM',
+    'start_date': '201400101',
+    'end_date': '20191231',
+    'item_code1': '005Y003',
+    'item_code2': 'BECBLA03'
+}
+
+exchange_rate_dollar_kwargs = {
+    'from': 1,
+    'to': 5000,
+    'search_type': 'DD',
+    'start_date': '201400101',
+    'end_date': '20191231',
+    'item_code1': '036Y001',
+    'item_code2': '0000001'
+}
+
 
 def get_korbank_result(_url):
     http = urllib3.PoolManager()
@@ -53,88 +94,53 @@ def df_to_sql(rest_data, table_name):
     print(df_select)
 
 
-def korbank_kospi_url(f):
+# https://stackoverflow.com/questions/8855183/strangeness-with-a-decorator
+def korbank_url(insert_function):
     url_manager = UrlManager()
-    url_manager \
-        .add_api_key(api_key) \
-        .add_from(1) \
-        .add_to(5000) \
-        .add_item_code1('064Y001') \
-        .add_search_type('DD') \
-        .add_start_date('201400101') \
-        .add_end_date('20191231') \
-        .add_item_code2('0001000')
 
-    url = url_manager.build_url()
+    def wrapper(*args, **kwargs):
+        url_manager \
+            .add_api_key(api_key) \
+            .add_from(kwargs['from']) \
+            .add_to(kwargs['to']) \
+            .add_item_code1(kwargs['item_code1']) \
+            .add_search_type(kwargs['search_type']) \
+            .add_start_date(kwargs['start_date']) \
+            .add_end_date(kwargs['end_date']) \
+            .add_item_code2(kwargs['item_code2'])
 
-    def inner(*args, **kwargs):
-        f(url)
+        url = url_manager.build_url()
+        insert_function(url)
 
-    return inner
+    return wrapper
 
 
 # 1) kospi
-@korbank_kospi_url
+@korbank_url
 def kospi_day_insert(url):
     df_to_sql(get_korbank_result(url), 'stock_kospi_day')
 
 
 # 2) 기업대출
-def corporate_insert():
-    url_manager = UrlManager()
-    url_manager \
-        .add_api_key(api_key) \
-        .add_from(1) \
-        .add_to(5000) \
-        .add_item_code1('005Y003') \
-        .add_search_type('MM') \
-        .add_start_date('201400101') \
-        .add_end_date('20191231') \
-        .add_item_code2('BECBLA02')
-
-    arr_data = get_korbank_result(url_manager.build_url())
-
-    df_to_sql(arr_data, 'economy_corporate_loan_month')
+@korbank_url
+def corporate_insert(url):
+    df_to_sql(get_korbank_result(url), 'economy_corporate_loan_month')
 
 
 # 3) 가계 대출
-def household_loan_month():
-    url_manager = UrlManager()
-    url_manager \
-        .add_api_key(api_key) \
-        .add_from(1) \
-        .add_to(5000) \
-        .add_item_code1('005Y003') \
-        .add_search_type('MM') \
-        .add_start_date('201400101') \
-        .add_end_date('20191231') \
-        .add_item_code2('BECBLA03')
-
-    arr_data = get_korbank_result(url_manager.build_url())
-
-    df_to_sql(arr_data, 'economy_household_loan_month')
+@korbank_url
+def household_loan_month(url):
+    df_to_sql(get_korbank_result(url), 'economy_household_loan_month')
 
 
 # 4) 환율
-def exchange_rate_dollar_day():
-    url_manager = UrlManager()
-    url_manager \
-        .add_api_key(api_key) \
-        .add_from(1) \
-        .add_to(5000) \
-        .add_item_code1('036Y001') \
-        .add_search_type('DD') \
-        .add_start_date('201400101') \
-        .add_end_date('20191231') \
-        .add_item_code2('0000001')
-
-    arr_data = get_korbank_result(url_manager.build_url())
-
-    df_to_sql(arr_data, 'economy_exchange_rate_dollar_day')
+@korbank_url
+def exchange_rate_dollar_day(url):
+    df_to_sql(get_korbank_result(url), 'economy_exchange_rate_dollar_day')
 
 
 if __name__ == '__main__':
-    kospi_day_insert()
-    corporate_insert()
-    household_loan_month()
-    exchange_rate_dollar_day()
+    kospi_day_insert(**kospi_kwargs)
+    corporate_insert(**corporate_loan_kwargs)
+    household_loan_month(**household_loan_kwargs)
+    exchange_rate_dollar_day(**exchange_rate_dollar_kwargs)
