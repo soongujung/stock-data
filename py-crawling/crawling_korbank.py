@@ -42,10 +42,10 @@ def df_to_sql(rest_data, table_name):
 
     # -- database insert
     df_insert.to_sql(name=table_name,
-                           con=alchemy_conn,
-                           index=False,
-                           if_exists='replace',  # {'fail', 'replace', 'append'}, default : fail
-                           schema='public')
+                     con=alchemy_conn,
+                     index=False,
+                     if_exists='replace',   # {'fail', 'replace', 'append'}, default : fail
+                     schema='public')
 
     # -- select database insert result
     df_select = pandas_sql.read_sql_query("select * from {}".format(table_name), alchemy_conn)
