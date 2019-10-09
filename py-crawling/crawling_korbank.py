@@ -53,8 +53,7 @@ def df_to_sql(rest_data, table_name):
     print(df_select)
 
 
-# 1) kospi
-def kospi_day_insert():
+def korbank_kospi_url(f):
     url_manager = UrlManager()
     url_manager \
         .add_api_key(api_key) \
@@ -68,6 +67,15 @@ def kospi_day_insert():
 
     url = url_manager.build_url()
 
+    def inner(*args, **kwargs):
+        f(url)
+
+    return inner
+
+
+# 1) kospi
+@korbank_kospi_url
+def kospi_day_insert(url):
     df_to_sql(get_korbank_result(url), 'stock_kospi_day')
 
 
