@@ -1,5 +1,5 @@
 
 
-keys = {
-    'korbank' : '--'
+KEY_MAPPINGS = {
+    'korbank': '--'
 }
