@@ -12,6 +12,8 @@ from db_connector.alchemy.connection_manager import ConnectionManager
 from mapper.column_mapping.korbank import get_column_list, get_column_types
 from korbank.util.urls import UrlManager
 
+from korbank.parameters.parameters import kospi_kwargs, corporate_loan_kwargs, household_loan_kwargs, exchange_rate_dollar_kwargs
+
 # Connection 생성
 alchemy_conn = ConnectionManager.create_connection(postgresql_dev)
 
@@ -21,47 +23,6 @@ dict_columns_type = get_column_types()
 
 # API KEY
 api_key = KEY_MAPPINGS['korbank']
-
-# TODO: 패키지로 정리할 것.
-kospi_kwargs = {
-    'from': 1,
-    'to': 5000,
-    'search_type': 'DD',
-    'start_date': '201400101',
-    'end_date': '20191231',
-    'item_code1': '064Y001',
-    'item_code2': '0001000'
-}
-
-corporate_loan_kwargs = {
-    'from': 1,
-    'to': 5000,
-    'search_type': 'MM',
-    'start_date': '201400101',
-    'end_date': '20191231',
-    'item_code1': '005Y003',
-    'item_code2': 'BECBLA02'
-}
-
-household_loan_kwargs = {
-    'from': 1,
-    'to': 5000,
-    'search_type': 'MM',
-    'start_date': '201400101',
-    'end_date': '20191231',
-    'item_code1': '005Y003',
-    'item_code2': 'BECBLA03'
-}
-
-exchange_rate_dollar_kwargs = {
-    'from': 1,
-    'to': 5000,
-    'search_type': 'DD',
-    'start_date': '201400101',
-    'end_date': '20191231',
-    'item_code1': '036Y001',
-    'item_code2': '0000001'
-}
 
 
 def get_korbank_result(_url):
