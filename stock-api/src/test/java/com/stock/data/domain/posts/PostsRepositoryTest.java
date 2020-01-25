@@ -28,6 +28,16 @@ public class PostsRepositoryTest {
 		String content = "테스트 본문";
 		String author = "helloSydney@gmail.com";
 
+		// 롬복이 작동할 때는 아래 코드로...
+//		postsRepository.save(
+//			Posts.builder()
+//				.content(content)
+//				.title(title)
+//				.author(author)
+//				.build()
+//		);
+
+		// 롬복이 IDE에서 정상동작하지 않는다면...
 		postsRepository.save(
 			new Posts(title, content, author)
 		);
