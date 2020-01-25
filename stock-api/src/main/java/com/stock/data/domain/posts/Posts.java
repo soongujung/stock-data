@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-//@NoArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Posts {
 
@@ -25,8 +25,6 @@ public class Posts {
 	private String content;
 
 	private String author;
-
-	public Posts(){}
 
 	@Builder
 	public Posts(String title, String content, String author){
