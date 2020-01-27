@@ -36,3 +36,6 @@ build/
 
 **/__pycache__/**
 **/env-scheduler/**
+**/application-oauth.properties
+application-oauth.properties
+
