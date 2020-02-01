@@ -1,7 +1,6 @@
 package com.stock.data.web.index;
 
 import com.stock.data.config.auth.dto.SessionUser;
-import com.stock.data.domain.user.User;
 import com.stock.data.web.posts.PostsService;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
