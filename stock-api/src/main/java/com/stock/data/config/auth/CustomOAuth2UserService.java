@@ -28,23 +28,24 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		OAuth2UserService delegator = new DefaultOAuth2UserService();
 		OAuth2User oAuth2User = delegator.loadUser(userRequest);
 
-		// 1)
+		// 1) google 로그인시 로그인한 클라이언트의 registrationId를 얻어온다.
 		String registrationId =
 			userRequest.getClientRegistration().getRegistrationId();
 
-		// 2)
+		// 2) user name 속성을 받아온다.
 		String userNameAttributeName =
 			userRequest.getClientRegistration().getProviderDetails()
 						.getUserInfoEndpoint()
 						.getUserNameAttributeName();
 
-		// 3)
+		// 3) registrationId, userName 과 OAuth Security 에서 건네받은 OAuth2User 를 기반으로 OAuthAttributes 객체를 생성
 		OAuthAttributes attributes =
 			OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
+		// 	  findByEmail로 user를 찾아서 DB에 등록한다.
 		User user = saveOrUpdate(attributes);
 
-		// 4)
+		// 4) 찾은 사용자를 session에 저장해둔다.
 		httpSession.setAttribute("user", new SessionUser(user));
 
 		return new DefaultOAuth2User(
@@ -56,6 +57,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		);
 	}
 
+	// findByEmail 로 user를 찾아서 저장
 	private User saveOrUpdate(OAuthAttributes attributes){
 		User user =
 			userRepository.findByEmail(attributes.getEmail())
