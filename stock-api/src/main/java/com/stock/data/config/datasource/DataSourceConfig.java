@@ -1,4 +1,4 @@
-package com.stock.data.config.datasource.jpa;
+package com.stock.data.config.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
