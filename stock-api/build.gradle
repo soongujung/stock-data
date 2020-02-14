@@ -29,14 +29,36 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
-//    compile('org.springframework.boot:spring-boot-starter-test')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-oauth2-client')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('com.h2database:h2')
     compile('org.mariadb.jdbc:mariadb-java-client')
-//    spring-session-jdbc (세션 저장소를 jdbc로 지정)
+
+    /** HikariCP -- */
+    /**  - opt 1)
+     *          HikariCP 버전 강제 지정 */
+//    compile('com.zaxxer:HikariCP:3.1.0')
+
+    /**  - opt 2)
+     *          Spring Boot With HikariCP 권장설정
+     *          Spring Boot 2.0 이후부터 hikari 가 default 로 잡혀있으므로 아래 dependency 만 추가해주면 된다.*/
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+
+    /** log4jdbc -- */
+    compile group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+
+    /** spring-session-jdbc (세션 저장소를 jdbc로 지정) */
     compile('org.springframework.session:spring-session-jdbc')
+
+/** ------------
+ **  TEST SCOPE
+ ** ------------ */
+    /** HikariCP -- */
+    /**          실제 DB (AWS RDS)로 테스트시 주석 제거 */
+    testCompile('org.springframework.boot:spring-boot-starter-jdbc')
+
+    /** Boot */
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile("org.springframework.security:spring-security-test")
 }
